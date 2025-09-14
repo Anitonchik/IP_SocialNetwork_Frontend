@@ -11,7 +11,7 @@ export const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route element={<MainLayout />}>
-                    <Route index element={<MainPage />} />
+                    <Route path="/" element={<MainPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/chats" element={<ChatList />} />
                     <Route path="/settings" element={<Settings />} />

@@ -9,6 +9,7 @@ const PostList = () => {
   const model = new PostModel();
 
   useEffect(() => {
+    alert(JSON.stringify(model))
     model.getAll("notUsersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId).then(setPosts);
   }, []);
 

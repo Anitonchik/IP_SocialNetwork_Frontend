@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "start": "vite",
+        "start": "vite --port 3001",
         "build": "vite build",
         "prod": "npm-run-all build serve",
         "lint": "eslint ."

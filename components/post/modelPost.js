@@ -10,12 +10,15 @@ export default class PostModel {
 
     async getAll(newPath) {
         let elements;
+        alert(PATH + "/" + newPath)
         if (newPath != null){
             elements = await getAllItems(PATH + "/" + newPath);
         }
         else {
             elements = await getAllItems(PATH);
         }
+
+        
         
         this.data = elements.map((post) => ({
             ...post

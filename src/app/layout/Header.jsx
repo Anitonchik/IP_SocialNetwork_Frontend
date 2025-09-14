@@ -4,24 +4,25 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 export const Header = () => {
     return (
-        <header className="container-background container d-flex justify-content-between p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
-            <NavLink className="nav-link" to="/">
-                Главная
+        <header className="container-background container d-flex p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
+            <>
+            <NavLink className="main-text" to="/">
+                Main
             </NavLink>
-            <nav className="d-flex flex-grow-1 justify-content-right gap-3">
+            </>
+            <>
+            <nav className="d-flex justify-content-end flex-grow-1 gap-3 mr-1">
                 <NavLink className="main-text" to="/settings">
-                    Настройки
-                    <i class="bi bi-intersect" style="color: #fffacd;"></i>
+                    Settings
                 </NavLink>
                 <NavLink className="main-text" to="/chats">
-                    Чаты
-                    <i class="bi bi-gear-fill" style="color: #fffacd;"></i>
+                    Chats
                 </NavLink>
                 <NavLink className=" main-text" to="/profile">
-                    Профиль
-                    <i class="bi bi-messenger" style="color: #fffacd;"></i>
+                    Profile
                 </NavLink>
             </nav>
+            </>
             
         </header>
     );

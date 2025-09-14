@@ -49,7 +49,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
       <button
         id="createPostButton"
         className="btn btn-light button-sbc"
-        style={{ width: "90%" }}
+        style={{ width: "100%" }}
         onClick={() => {
           setUrl("");
           setText("");
@@ -81,6 +81,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
+            
           </div>
         )}
 
@@ -105,7 +106,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
 
           {!isEditing && (
             
-            <div className="adding-post-button text-center" style={{ width: "100%", margin: "10px 0" }}>
+            <div className="adding-post-button text-center d-flex flex-column" style={{ width: "100%", margin: "10px 0" }}>
               <button
                 id="addPostButton"
                 className="btn btn-light"
@@ -113,6 +114,14 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
                 onClick={handleAdd}
               >
                 Add post
+              </button>
+              <button
+                id="cancelUpdatePostButton"
+                className="btn btn-light"
+                style={{ width: "100%", margin: "10px 0" }}
+                onClick={handleCancel}
+              >
+                Cancel
               </button>
             </div>
           )}
