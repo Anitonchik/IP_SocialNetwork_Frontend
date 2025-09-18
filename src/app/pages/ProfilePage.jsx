@@ -1,7 +1,7 @@
 import React from "react";
 import Profile from "../../components/profile/Profile";
 import PostsList from "../../components/profile/PostsProfileList";
-import UserModel from "../../../components/post/modelUser";
+import UserModel from "../../../components/api/modelUser";
 import { useState } from "react";
 import { useEffect } from "react";
 

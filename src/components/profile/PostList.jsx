@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post.jsx";
-import PostModel from "../../../components/post/modelPost.js";
+import PostModel from "../../../components/api/modelPost.js";
 import "../../../styles.css";
 
 const PostList = () => {
