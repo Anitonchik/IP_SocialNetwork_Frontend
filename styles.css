@@ -183,6 +183,7 @@
     border-bottom: none;
 }
 
+
  .setting-inf {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
     color: #fffacd;
@@ -194,6 +195,20 @@
     color: #ffa07a;
  }
 
+ .setting-inf input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: inherit;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    direction: rtl;
+    text-align: right
+  }
+
  .setting-profile { 
     padding: 20px 50px 20px 50px;
  }
@@ -201,7 +216,6 @@
  .some-chat { 
     height: 80%;
     overflow-y: scroll;
-    width: 800px;
     padding: 0px 10px 0px 10px;
  }
 

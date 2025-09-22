@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const ProfilePage = () => {
+  
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
 

@@ -6,10 +6,12 @@ const makeRequest = async (path, params, vars, method = "GET", data = null) => {
         const pathVariables = vars ? `/${vars}` : "";
         const options = { method };
         const hasBody = (method === "POST" || method === "PUT") && data;
+        
         if (hasBody) {
             options.headers = { "Content-Type": "application/json;charset=utf-8" };
             options.body = JSON.stringify(data);
         }
+        
         const response = await fetch(`${URL}${path}${pathVariables}${requestParams}`, options);
         if (!response.ok) {
             throw new Error(`Response status: ${response?.status}`);

@@ -12,7 +12,7 @@ const MessageInput = ({ onSend }) => {
     };
   
     return (
-      <div className="form-group container container-background enter-message d-flex align-items-center justify-content-between">
+      <div className="form-group container container-background enter-message d-flex align-items-center justify-content-between ">
         <div>
           <textarea
             className="col-12"

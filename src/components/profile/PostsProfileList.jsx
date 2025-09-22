@@ -13,6 +13,10 @@ const PostsList = () => {
     model.getAll("usersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId).then(setPosts);
   }, []);
 
+  if (posts) {
+    console.log(posts)
+  }
+
   const addPost = async (userId, url, text) => {
     let postDTO = {
       userId: userId,
@@ -58,7 +62,8 @@ const PostsList = () => {
 
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
         {[... posts].reverse().map((post) => (
-          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} />
+          
+          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={true} />
         ))}
       </div>
     </>

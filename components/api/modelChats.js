@@ -7,7 +7,6 @@ export default class ChatsModel {
     async getAll(newPath, userId) {
         let elements;
         elements = await getAllItems(PATH + "/" + newPath + "/" + userId);
-        
         return elements;
     } 
 

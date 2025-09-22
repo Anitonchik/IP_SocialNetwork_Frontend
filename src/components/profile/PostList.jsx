@@ -9,7 +9,6 @@ const PostList = () => {
   const model = new PostModel();
 
   useEffect(() => {
-    alert(JSON.stringify(model))
     model.getAll("notUsersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId).then(setPosts);
   }, []);
 
@@ -28,7 +27,7 @@ const PostList = () => {
 
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
         {[... posts].reverse().map((post) => (
-          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} />
+          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={false}/>
         ))}
       </div>
     </>
