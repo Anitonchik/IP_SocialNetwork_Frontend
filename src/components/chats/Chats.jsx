@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useOutletContext  } from "react-router-dom";
 import ChatsModel from "../../../components/api/modelChats.js";
 import UserModel from "../../../components/api/modelUser.js";
 import { useState } from "react";
@@ -27,12 +27,18 @@ const ChatList = () => {
 
         const updatedChats = response.map(element => {
           const createdAt = new Date(element.createdAt);
+          const lastMessage = element.messages?.slice(-1)[0];
+          const lastMessageDate = new Date(lastMessage.createdAt)
           return {
             ...element,
             createdAt: createdAt,
             day: createdAt.getDate(),
             month: monthsShort[createdAt.getMonth()],
             time: createdAt.toTimeString().slice(0, 5),
+            lastMessage: lastMessage,
+            dayLastMessage: lastMessageDate.getDate(),
+            monthLastMessage: monthsShort[lastMessageDate.getMonth()],
+            timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
           };
         });
 
@@ -51,22 +57,22 @@ const ChatList = () => {
       {[...chats].map((chat) => (
         <NavLink
           key={chat.id}
-          to="/somechat"
+          to={`/somechat/${chat.id}`}
           state={{ chat, user }}
           href="SeparateChat.html"
           className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
           style={{ maxWidth: 1000, padding: "10px 5px" }}
         >
           <div className="d-flex align-items-center profile-message">
-            <img className="profile" src={chat.chatAvatar} alt="ava" />
+            <img className="profile" src={chat.user.userAvatarURL} alt="ava" />
             <div className="main-text d-flex flex-column justify-content-center">
-              <p className="mb-1">{chat.chatName}</p>
-              <p className="mb-1">{chat.message}</p>
+              <p className="mb-1">{chat.user.userName}</p>
+              <p className="mb-1">{chat.lastMessage.messageText}</p>
             </div>
           </div>
           <div className="text-end pe-4 disc-time-text">
-            <p className="mb-1">{chat.day + " " + chat.month}</p>
-            <p className="mb-1">{chat.time}</p>
+            <p className="mb-1">{chat.dayLastMessage + " " + chat.monthLastMessage}</p>
+            <p className="mb-1">{chat.timeLastMessage}</p>
           </div>
         </NavLink>
       ))}

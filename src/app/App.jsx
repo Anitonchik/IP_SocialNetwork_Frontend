@@ -12,10 +12,10 @@ export const App = () => {
             <Routes>
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<MainPage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/profile/:userId" element={<ProfilePage />} />
                     <Route path="/chats" element={<ChatList />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/somechat" element={<ChatWindow />} />
+                    <Route path="/somechat/:chatId" element={<ChatWindow />} />
                     <Route path="*" element={<MainPage />} />
                 </Route>
             </Routes>

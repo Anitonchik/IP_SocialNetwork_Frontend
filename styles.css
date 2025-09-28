@@ -8,6 +8,7 @@
 .main-text {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
     color: #fffacd;
+    font-size: 20px;
     text-decoration: none;
 }
 
@@ -526,9 +527,17 @@
         margin-left: 10px;
     }
 
+    
+
     /*.profile-inf {
         margin-right: 0px;
     }*/
+}
+
+@media  (max-width: 450px) {
+    .profile-inf-firsttrio {
+        flex-direction: column;
+    }
 }
 
 @media only screen and (min-width: 401px) and (max-width: 960px) { 
@@ -567,4 +576,10 @@
     .message-chat-time {
         font-size: 14px;
     }
+
+    
+
+
+
+    
 }

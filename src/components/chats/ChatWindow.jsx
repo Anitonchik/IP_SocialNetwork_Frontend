@@ -5,13 +5,15 @@ import { useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import MessagesModel from "../../../components/api/modelMessages";
 import "../../../styles.css";
+import { useParams, useOutletContext } from "react-router-dom";
 
 const ChatWindow = () => {
   const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+  const { setHeaderData } = useOutletContext();
+
   const location = useLocation();
   const { chat, user } = location.state || {}; 
-  console.log (chat.messages)
 
   const [messages, setMessages] = useState([]);
   const model = new MessagesModel();
@@ -19,7 +21,11 @@ const ChatWindow = () => {
   let date = null;
   let showDate = true;
 
+
+
   useEffect(() => {
+    setHeaderData(chat);
+
     const fetchMessages = async () => {
       try {
         console.log(chat.messages)
@@ -60,12 +66,18 @@ const ChatWindow = () => {
 
   
   const handleSendMessage = (text) => {
+    const createdAt = new Date();
     const newMessage = {
-        text,
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        sender: "your",
+        chatId: chat.id,
+        userId: user.id,
+        messageText: text,
+        createdAt: createdAt,
+        attachments: [],
+        readBy: [],
+        
       };
-      setMessages((prev) => [...prev, newMessage]);
+      setMessages(model.createMessage(newMessage).toArray());
+      console.log(messages)
     };
   
     const handleRemoveMessage = (index) => {
@@ -83,7 +95,7 @@ const ChatWindow = () => {
 
           if (date === null || msg.day !== date.getDate() || msg.month !== date.getMonth()) {
             showDate = true;
-            date = new Date(msg.createdAt); // Обновляем `date` для следующего сравнения
+            date = new Date(msg.createdAt);
           }
 
             return (

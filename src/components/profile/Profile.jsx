@@ -15,7 +15,7 @@ const Profile = ({user}) => {
           <img className="profile-info-img" src={user.userAvatarURL} alt="avatar" />
           <div className="main-text">{user.userName}</div>
         </div>
-        <div className="d-flex justify-content-md-between profile-inf me-0 me-md-5">
+        <div className="d-flex profile-inf-firsttrio justify-content-md-between profile-inf me-0 me-md-5">
           <div>
             <p className="text-center main-text">Publications</p>
             <p className="text-center main-text">{user.publications}</p>

@@ -10,6 +10,11 @@ export default class ChatsModel {
         return elements;
     } 
 
+    async getChat(id) {
+        const chat = await getItem(PATH, id);
+        return chat;
+    }
+
     async createChat(chatDTO) {
         const chat = await createItem(PATH, chatDTO)
         return chat;
