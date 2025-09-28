@@ -32,8 +32,7 @@ export const Header = ({ headerData }) => {
     const isChatPage = location.pathname.startsWith('/somechat/');
     const chatId = isChatPage ? location.pathname.split('/')[2] : null;   
     
-   
-    
+    const userId = JSON.parse(localStorage.getItem('userSettings')).userId; //ТУТ ПОМЕНЯТЬ USERID
 
     return (
         <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
@@ -43,7 +42,7 @@ export const Header = ({ headerData }) => {
                 </NavLink>
 
                 {(isChatPage && headerData) && (
-                        <div className="d-flex align-items-center gap-3" onClick={() => navigate('/user-page')}> 
+                        <div className="d-flex align-items-center gap-3" onClick={() => navigate(`/profile/${headerData.user.id}`)}> 
                             <img 
                                 src={headerData.user.userAvatarURL} 
                                 alt={"avatar"}
@@ -67,7 +66,7 @@ export const Header = ({ headerData }) => {
                     <NavLink className="main-text nav-list-link" to="/chats">
                         Chats
                     </NavLink>
-                    <NavLink className=" main-text nav-list-link" to="/profile">
+                    <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
                         Profile
                     </NavLink>
                 </ul>

@@ -1,13 +1,18 @@
 import React from "react";
 import "../../../styles.css";
+import { useNavigate } from "react-router-dom";
+
 
 const Post = ({ post, onDelete, onEdit, showButtons }) => {
+
+  const navigate = useNavigate()
+
   return (
   <div>
     <div className="container container-background mx-auto" >
 
         <div className="d-flex justify-content-between align-items-center container container-background" style={{gap: '10px'}}>
-            <div className="d-flex align-items-center justify-content-center" style={{gap: '10px'}}>
+            <div className="d-flex align-items-center justify-content-center cursor-pointer"  style={{gap: '10px'}} onClick={() => navigate(`/profile/${post.user.id}`)}>
                 <img className="post-header-img" src={post.user.userAvatarURL} alt="first story" />
                 <p className="main-text">{post.user.userName}</p>
             </div>

@@ -5,15 +5,17 @@ import { useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import MessagesModel from "../../../components/api/modelMessages";
 import "../../../styles.css";
-import { useParams, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const ChatWindow = () => {
   const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const path = "fromChat"
+
+  const location = useLocation();
+  const { chat, user } = location.state || {};
 
   const { setHeaderData } = useOutletContext();
 
-  const location = useLocation();
-  const { chat, user } = location.state || {}; 
 
   const [messages, setMessages] = useState([]);
   const model = new MessagesModel();
@@ -22,8 +24,8 @@ const ChatWindow = () => {
   let showDate = true;
 
 
-
   useEffect(() => {
+
     setHeaderData(chat);
 
     const fetchMessages = async () => {
@@ -32,27 +34,31 @@ const ChatWindow = () => {
         const messages = chat.messages.map(element => {
           const createdAt = new Date(element.createdAt);
 
-          if (chat.messages.userId === user.id) {
-            return {
-              ...element,
-              createdAt: createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              sender: "your"
-              }
-          }
-          else {
-            return {
-              ...element,
-              createdAt: createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              sender: "stranger"
-              }
-          }
+          if (user) {
+            if (element.userId == user.id) {
+              return {
+                ...element,
+                createdAt: createdAt,
+                day: createdAt.getDate(),
+                month: monthsShort[createdAt.getMonth()],
+                time: createdAt.toTimeString().slice(0, 5),
+                sender: "your"
+                }
+            }
+            else {
+              return {
+                ...element,
+                createdAt: createdAt,
+                day: createdAt.getDate(),
+                month: monthsShort[createdAt.getMonth()],
+                time: createdAt.toTimeString().slice(0, 5),
+                sender: "stranger"
+                }
+            }
+          } 
+          
         });
+        console.log(messages)
   
         setMessages(messages);
       } catch (error) {
@@ -76,7 +82,13 @@ const ChatWindow = () => {
         readBy: [],
         
       };
-      setMessages(model.createMessage(newMessage).toArray());
+      try {
+        model.createMessage(newMessage);
+      }
+      catch (error) {
+        alert("Не удалось отправить сообщение")
+      }
+      setMessages(model.getMessagesFromChat(path, chat.id));
       console.log(messages)
     };
   
@@ -86,16 +98,17 @@ const ChatWindow = () => {
 
   
     return (
-      <div className="d-flex flex-column justify-content-center g-0" style={{ maxWidth: 1000, width: "100%", height: "95vh", margin: "auto" }}>
-        <div id="messages-block" className="container container-background some-chat m-0">
-            
-        
+      <div className=" d-flex flex-column justify-content-center g-0" style={{ maxWidth: 1000, height: "87vh", margin: "auto" }}>
+        <div id="messages-block" className="container container-background align-items-center some-chat  m-0">
   
           {messages.map((msg, index) => {
 
-          if (date === null || msg.day !== date.getDate() || msg.month !== date.getMonth()) {
+          if (date === null || msg.day != date.getDate() || msg.month != monthsShort[date.getMonth()]) {
             showDate = true;
             date = new Date(msg.createdAt);
+          }
+          else {
+            showDate = false;
           }
 
             return (

@@ -6,6 +6,20 @@ import React, { useState } from "react";
 
 const MessageInput = ({ onSend }) => {
     const [message, setMessage] = useState("");
+
+    const handleInput = (e) => {
+      e.target.style.height = 'auto';
+      e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+  };
+
+    const handleKeyDown = (e) => {
+      // Если нажат Enter без зажатого Shift
+      if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault(); // Предотвращаем перенос строки
+          handleSend();
+      }
+      // Если нажат Enter с зажатым Shift - будет обычный перенос строки
+  };
   
     const handleSend = () => {
       if (message.trim()) {
@@ -22,6 +36,9 @@ const MessageInput = ({ onSend }) => {
             placeholder="Message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            rows={2}
+            onInput={handleInput}
           />
         </div>
         <div className="send-button">

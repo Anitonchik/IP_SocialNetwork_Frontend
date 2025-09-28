@@ -254,8 +254,8 @@
     backdrop-filter: blur(60px);
     border: 1px solid rgba(159, 157, 255, 0.742);
     border-radius: 20px;
-    width: 300px;
-    max-width: 500px;
+    width: 20rem;
+    max-width: 25rem;
     margin-left: auto;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -269,8 +269,8 @@
     backdrop-filter: blur(60px);
     border: 1px solid rgba(252, 157, 255, 0.742);
     border-radius: 20px;
-    width: 300px;
-    max-width: 500px;
+    width: 20rem;
+    max-width: 25rem;
     margin-right: auto;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -302,14 +302,14 @@
 
  .message-chat-text {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 16px;
     color: #525252;
     padding-left: 5px;
  }
 
  .message-chat-time {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    font-size: 9px;
+    font-size: 10px;
     color: #47474764;
     text-align: end;
     padding-right: 5px;
@@ -575,11 +575,5 @@
 
     .message-chat-time {
         font-size: 14px;
-    }
-
-    
-
-
-
-    
+    }    
 }

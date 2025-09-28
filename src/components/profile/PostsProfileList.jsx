@@ -4,18 +4,21 @@ import PostEditor from "./PostEditor.jsx";
 import PostModel from "../../../components/api/modelPost.js";
 import "../../../styles.css";
 
-const PostsList = () => {
+const PostsList = ({user}) => {
+  let isUsersPage = false; 
+
   const [posts, setPosts] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
-  const model = new PostModel();
+  const model = new PostModel()
+
 
   useEffect(() => {
-    model.getAll("usersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId).then(setPosts);
-  }, []);
+    if (user.id == JSON.parse(localStorage.getItem('userSettings')).userId) {
+      isUsersPage = true;
+    } //ТУТ ПОМЕНЯТЬ USERID)
+    model.getAll("usersPosts/" + user.id).then(setPosts);
+  }, [user]);
 
-  if (posts) {
-    console.log(posts)
-  }
 
   const addPost = async (userId, url, text) => {
     let postDTO = {
@@ -53,19 +56,32 @@ const PostsList = () => {
 
   return (
     <>
-      <PostEditor
-        onAddPost={addPost}
-        onUpdatePost={updatePost}
-        editingPost={editingPost}
-        cancelEdit={cancelEdit}
-      />
+    {(isUsersPage) && (
+      <>
+        <PostEditor
+          onAddPost={addPost}
+          onUpdatePost={updatePost}
+          editingPost={editingPost}
+          cancelEdit={cancelEdit}
+        />
 
+        <div style={{ maxWidth: 1000, margin: "10px auto" }}>
+          {[... posts].reverse().map((post) => (
+            
+            <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={true} />
+          ))}
+        </div>
+      </>
+    )}
+
+    {(!isUsersPage) && (
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
-        {[... posts].reverse().map((post) => (
-          
-          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={true} />
-        ))}
-      </div>
+      {[... posts].reverse().map((post) => (
+        
+        <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={false} />
+      ))}
+    </div>
+    )}
     </>
   );
 };

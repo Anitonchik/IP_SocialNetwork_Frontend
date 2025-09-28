@@ -20,28 +20,50 @@ const ChatList = () => {
       try {
         userModel = new UserModel();
         let user = await userModel.getUser(userId);
+        
 
         setUser(user);
 
         const response = await chatsModel.getAll("userschats", user.id);
 
         const updatedChats = response.map(element => {
+          
           const createdAt = new Date(element.createdAt);
-          const lastMessage = element.messages?.slice(-1)[0];
-          const lastMessageDate = new Date(lastMessage.createdAt)
-          return {
-            ...element,
-            createdAt: createdAt,
-            day: createdAt.getDate(),
-            month: monthsShort[createdAt.getMonth()],
-            time: createdAt.toTimeString().slice(0, 5),
-            lastMessage: lastMessage,
-            dayLastMessage: lastMessageDate.getDate(),
-            monthLastMessage: monthsShort[lastMessageDate.getMonth()],
-            timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
-          };
-        });
 
+          if (element.messages) {
+            let lastMessage = element.messages.slice(-1)[0];
+            if (lastMessage) {
+              let lastMessageDate = new Date(lastMessage.createdAt)
+              return {
+                ...element,
+                createdAt: createdAt,
+                day: createdAt.getDate(),
+                month: monthsShort[createdAt.getMonth()],
+                time: createdAt.toTimeString().slice(0, 5),
+                lastMessage: lastMessage,
+                dayLastMessage: lastMessageDate.getDate(),
+                monthLastMessage: monthsShort[lastMessageDate.getMonth()],
+                timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
+              };
+            }
+          
+          else {
+            return {
+              ...element,
+              createdAt: createdAt,
+              day: createdAt.getDate(),
+              month: monthsShort[createdAt.getMonth()],
+              time: createdAt.toTimeString().slice(0, 5),
+              lastMessage: "chat created at",
+              dayLastMessage: createdAt.getDate(),
+              monthLastMessage: monthsShort[createdAt.getMonth()],
+              timeLastMessage: createdAt.toTimeString().slice(0, 5),
+            }
+          }
+        }
+
+        });
+        console.log(updatedChats)
         setChats(updatedChats);
       } catch (error) {
         console.error("Ошибка при загрузке чатов:", error);

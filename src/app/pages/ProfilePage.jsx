@@ -1,11 +1,11 @@
-import React from "react";
 import Profile from "../../components/profile/Profile";
 import PostsList from "../../components/profile/PostsProfileList";
 import UserModel from "../../../components/api/modelUser";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
+  const { userId } = useParams(); 
   
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -22,8 +22,8 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       try {
         const model = new UserModel();
-        const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
         const userData = await model.getUser(userId);
+        alert(JSON.stringify(userData))
         setUser(userData);
         setLoading(false);
       } catch (error) {
@@ -33,13 +33,13 @@ const ProfilePage = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [userId]);
 
   if (!loading) {
     return (
       <div>
         <Profile user={user}/>
-        <PostsList />
+        <PostsList user={user} />
       </div>
     );
   }
