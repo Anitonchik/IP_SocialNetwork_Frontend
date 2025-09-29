@@ -16,13 +16,13 @@ export default class MessagesModel {
         return message;
     }
 
-    /*async updatePost(cgatId, chatDTO) {
-        const chat = updateItem(PATH, cgatId, chatDTO)
+    async updatePost(msgId, messageDTO) {
+        alert("редактируется сообщение " + messageDTO.messageText)
+        const chat = updateItem(PATH, msgId, messageDTO)
         return chat;
-    }*/
+    }
 
-     async delete(item) {
-        const _id = item?.id || item;
-        await deleteItem(PATH, _id);
+     async delete(id) {
+        await deleteItem(PATH, id);
     }
 }

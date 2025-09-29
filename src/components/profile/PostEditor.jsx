@@ -30,7 +30,6 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
   };
 
   const handleUpdate = () => {
-    alert("ljhv")
     if (url.trim() && text.trim() && editingPost) {
       onUpdatePost(editingPost.id, JSON.parse(localStorage.getItem('userSettings')).userId, url, text);
     }
