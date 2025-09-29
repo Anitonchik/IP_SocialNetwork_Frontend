@@ -93,20 +93,22 @@ const ChatWindow = () => {
   };
 
   const onSendEditMessage = async (text) => {
-    alert("там")
     if (editMessage) {
       editMessage.messageText = text;
       await messageModel.updatePost(editMessage.id, editMessage);
       fetchMessages();
+      setIsEditing(false);
+      setEditMessage(null);
     }
     else {alert("чет не то")}
   }
 
   
 
-  const handleDelete = (id) => {
-    messageModel.delete(id);
+  const handleDelete = async (id) => {
+    await messageModel.delete(id);
     setMessages((prev) => prev.filter((_, i) => i !== id));
+    fetchMessages();
   };
 
   const handleUpdate = (message) => {

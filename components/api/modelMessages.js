@@ -17,7 +17,6 @@ export default class MessagesModel {
     }
 
     async updatePost(msgId, messageDTO) {
-        alert("редактируется сообщение " + messageDTO.messageText)
         const chat = updateItem(PATH, msgId, messageDTO)
         return chat;
     }

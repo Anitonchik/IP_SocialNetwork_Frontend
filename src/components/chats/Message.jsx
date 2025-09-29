@@ -12,11 +12,14 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   }
 
   const deleteMsg = () => {
-    handleDelete(msgId)
+    alert("delete")
+    handleDelete(message.id)
+    setVisible(!visible)
   };
 
   const updateMsg = () => {
     handleUpdate(message)
+    setVisible(!visible)
   }
 
   if (setUpdateMsg) {
@@ -32,7 +35,7 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
       {(visible) && (
         <div className="d-flex flex-column me-0">
           <div className="cursor-pointer" onClick={() => updateMsg()}>Edit</div>
-          <div onClick={() => deleteMsg}>Delete</div>
+          <div onClick={() => deleteMsg()}>Delete</div>
         </div>
       )}
     </>

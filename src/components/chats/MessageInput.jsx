@@ -32,7 +32,6 @@ const MessageInput = ({ isEditing, editMessage, onSendEditMessage, onSend }) => 
     const handleSend = () => {
       if (message.trim()) {
         if (isEditing) {
-          alert("тут")
           onSendEditMessage(message.trim());
         }
         else {
