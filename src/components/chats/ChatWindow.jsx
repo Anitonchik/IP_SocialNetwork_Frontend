@@ -1,9 +1,8 @@
 import MessageInput from "./MessageInput";
 import Message from "./Message";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import MessagesModel from "../../../components/api/modelMessages";
-import ChatModel from "../../../components/api/modelChats";
 import "../../../styles.css";
 import { useOutletContext } from "react-router-dom";
 
@@ -17,10 +16,10 @@ const ChatWindow = () => {
   const { setHeaderData } = useOutletContext();
 
   const messageModel = new MessagesModel();
-  const chatModel = new ChatModel();
   const [messages, setMessages] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(null);
+
 
   let date = null;
   let showDate = true;
@@ -29,13 +28,14 @@ const ChatWindow = () => {
   const fetchMessages = async () => {
     try {
       const chatMessages = await messageModel.getMessagesFromChat(path, chat.id);
-      console.log(chatMessages)
+      console.log(user)
 
       setMessages(chatMessages.map(element => {
         const createdAt = new Date(element.createdAt);
 
         if (user) {
-          if (element.userId == user.id) {
+          if (element.user.id == user.id) {
+            console.log(element.userId == user.id)
             return {
               ...element,
               createdAt: createdAt,
@@ -57,16 +57,17 @@ const ChatWindow = () => {
           }
         }
 
+        
+
       }))
+      console.log(messages)
     } catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
     }
   };
 
-
   useEffect(() => {
     setHeaderData(chat);
-
     fetchMessages();
   }, []);
 
@@ -103,7 +104,6 @@ const ChatWindow = () => {
     else {alert("чет не то")}
   }
 
-  
 
   const handleDelete = async (id) => {
     await messageModel.delete(id);
@@ -115,9 +115,6 @@ const ChatWindow = () => {
     setEditMessage(message);
     setIsEditing(true);
   }
-
-
-
 
   const messageList = useMemo(() => messages.map(msg => {
     if (date === null || msg.day != date.getDate() || msg.month != monthsShort[date.getMonth()]) {

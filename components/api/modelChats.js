@@ -6,12 +6,18 @@ export default class ChatsModel {
 
     async getAll(newPath, userId) {
         let elements;
+        //alert(PATH + "/" + newPath + "/" + userId)
         elements = await getAllItems(PATH + "/" + newPath + "/" + userId);
         return elements;
     } 
 
     async getChat(id) {
         const chat = await getItem(PATH, id);
+        return chat;
+    }
+
+    async getChatOfTwoUsers(userId, otherUserId){
+        const chat = await getItem(userId, otherUserId)
         return chat;
     }
 
@@ -25,8 +31,7 @@ export default class ChatsModel {
         return chat;
     }
 
-     async delete(item) {
-        const _id = item?.id || item;
-        await deleteItem(PATH, _id);
+     async delete(id) {
+        await deleteItem(PATH, id);
     }
 }

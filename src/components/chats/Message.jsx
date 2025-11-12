@@ -28,13 +28,24 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
 
   return (
     <>
+    {(message.isEdited) && 
+    (
+      <div className={`d-block ${message.sender}-message`} onContextMenu={setMenu}>
+        <div className="message-chat-text">{message.messageText}</div>
+        <div className="message-chat-time">{"edited " + message.time}</div>
+      </div>
+    )}
+    {(!message.isEdited) && 
+    (
       <div className={`d-block ${message.sender}-message`} onContextMenu={setMenu}>
         <div className="message-chat-text">{message.messageText}</div>
         <div className="message-chat-time">{message.time}</div>
       </div>
+    )}
+      
       {(visible) && (
-        <div className="d-flex flex-column me-0">
-          <div className="cursor-pointer" onClick={() => updateMsg()}>Edit</div>
+        <div className="message-menu gap-5">
+          <div onClick={() => updateMsg()}>Edit</div>
           <div onClick={() => deleteMsg()}>Delete</div>
         </div>
       )}

@@ -1,7 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles.css";
 
-const Profile = ({user}) => {
+const Profile = ({user, model}) => {
+  const [userFollowers, setUserFollowers] = useState([]);
+  const [userSubscriptions, setUserSubscriptions] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setUserFollowers(await model.getFollowers(user.Id));
+        setUserSubscriptions(await model.getSubscriptions(user.Id));
+      } catch (error) {
+        console.error("Ошибка загрузки пользователя:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -22,11 +37,11 @@ const Profile = ({user}) => {
           </div>
           <div>
             <p className="text-center main-text">Followers</p>
-            <p className="text-center main-text">{user.followers}</p>
+            <p className="text-center main-text">{userFollowers.length}</p>
           </div>
           <div>
             <p className="text-center main-text">Subscriptions</p>
-            <p className="text-center main-text">{user.subscriptions}</p>
+            <p className="text-center main-text">{userSubscriptions.length}</p>
           </div>
         </div>
       </div>

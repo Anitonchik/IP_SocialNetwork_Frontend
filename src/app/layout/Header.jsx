@@ -44,11 +44,11 @@ export const Header = ({ headerData }) => {
                 {(isChatPage && headerData) && (
                         <div className="d-flex align-items-center gap-3" onClick={() => navigate(`/profile/${headerData.user.id}`)}> 
                             <img 
-                                src={headerData.user.userAvatarURL} 
+                                src={headerData.correspondenceUser.userAvatarURL} 
                                 alt={"avatar"}
                                 className="profile d-flex align-items-center"
                             />
-                            <div className="main-text">{headerData.user.userName}</div>
+                            <div className="main-text">{headerData.correspondenceUser.userName}</div>
                         </div>
                     )}
             </nav>

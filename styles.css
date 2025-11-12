@@ -263,6 +263,20 @@
     word-wrap: break-word;
  }
 
+ .message-menu {
+    color: #63008e;
+    border: 1px solid rgba(220, 220, 220, 0.742);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.374);
+    width: 20rem;
+    max-width: 25rem;
+    margin-left: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
+ }
+
  .stranger-message {
     display: block;
     background-color: rgba(247, 214, 255, 0.821);

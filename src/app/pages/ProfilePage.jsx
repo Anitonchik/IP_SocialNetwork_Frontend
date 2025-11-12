@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
+  let model;
   const { userId } = useParams(); 
   
   const [user, setUser] = useState({});
@@ -21,7 +22,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const model = new UserModel();
+        model = new UserModel();
         const userData = await model.getUser(userId);
         alert(JSON.stringify(userData))
         setUser(userData);
@@ -38,7 +39,7 @@ const ProfilePage = () => {
   if (!loading) {
     return (
       <div>
-        <Profile user={user}/>
+        <Profile user={user} model={model}/>
         <PostsList user={user} />
       </div>
     );
