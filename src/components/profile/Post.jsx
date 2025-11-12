@@ -24,10 +24,12 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
             ) : null}
         </div>
         <div className="container container-background">
+          {post.postImageURL && (
             <div className="d-flex align-items-center justify-content-center container-background" >
-                <img className="post-inf-publication-img" src={post.postImageURL} alt="post1" />
+                <img className="post-inf-publication-img" src={post.postImageURL} alt="post" />
             </div>
-            <p className="sub-text">{post.postTextContent}</p>
+          )}
+            {post.postTextContent && (<p className="sub-text mt-2">{post.postTextContent}</p>)}
         </div>
         
     </div>

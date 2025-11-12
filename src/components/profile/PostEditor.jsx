@@ -22,10 +22,11 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
   }, [editingPost]);
 
   const handleAdd = () => {
-    if (url.trim() && text.trim()) {
+    if (url.trim() || text.trim()) {
       onAddPost(JSON.parse(localStorage.getItem('userSettings')).userId, url, text);
       setUrl("");
       setText("");
+      setIsCreating(false);
     }
   };
 

@@ -5,8 +5,7 @@ import PostModel from "../../../components/api/modelPost.js";
 import "../../../styles.css";
 
 const PostsList = ({user}) => {
-  let isUsersPage = false; 
-
+  const [isUsersPage, setIsUsersPage] = useState(false);
   const [posts, setPosts] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
   const model = new PostModel()
@@ -14,7 +13,7 @@ const PostsList = ({user}) => {
 
   useEffect(() => {
     if (user.id == JSON.parse(localStorage.getItem('userSettings')).userId) {
-      isUsersPage = true;
+      setIsUsersPage(true);
     } //ТУТ ПОМЕНЯТЬ USERID)
     model.getAll("usersPosts/" + user.id).then(setPosts);
   }, [user]);

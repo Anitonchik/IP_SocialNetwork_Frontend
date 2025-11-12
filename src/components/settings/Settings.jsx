@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import UserModel from "../../../components/api/modelUser";
+import PostModel from "../../../components/api/modelPost";
 import "../../../styles.css"
 
 const Settings = () => {
     const [user, setUser] = useState({});
+    const [usersProfilePosts, setUsersProfilePosts] = useState([]);
+    const [userFollowers, setUserFollowers] = useState([]);
+    const [userSubscriptions, setUserSubscriptions] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
 
 
@@ -25,9 +29,14 @@ const Settings = () => {
         const fetchUser = async () => {
           try {
             const model = new UserModel();
+            const postModel = new PostModel();
+
             const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
             const userData = await model.getUser(userId);
             setUser(userData);
+            setUserFollowers(await model.getFollowers(userId));
+            setUserSubscriptions(await model.getSubscriptions(userId));
+            setUsersProfilePosts(await postModel.getAll("usersPosts/" + userId))
           } catch (error) {
             console.error("Ошибка загрузки пользователя:", error);
           }
@@ -111,15 +120,15 @@ const Settings = () => {
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Publications</div>
-                        <div className="setting-inf">{user.publications}</div>
+                        <div className="setting-inf">{usersProfilePosts.length}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Followers</div>
-                        <div className="setting-inf">{user.followers}</div>
+                        <div className="setting-inf">{userFollowers.length}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Subscriptions</div>
-                        <div className="setting-inf">{user.subscriptions}</div>
+                        <div className="setting-inf">{userSubscriptions.length}</div>
                     </div>
                 </div>
                 
