@@ -53,21 +53,6 @@ const ChatList = () => {
         let messages = await messageModel.getMessagesFromChat("fromChat", element.id)
         const messagesArray = Object.values(messages);
         messagesArray.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        /*for (let i = 0; i < messages.lenght; i++) {
-          let date = new Date(messages[i].createdAt)
-          messages[i] = {
-              ...messages[i],
-              createdAt: date,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              day: lastMessageDate.getDate(),
-              month: monthsShort[lastMessageDate.getMonth()],
-              time: lastMessageDate.toTimeString().slice(0, 5),
-          }
-        }*/
-
         
         if (messagesArray) {
           let lastMessage = messagesArray.slice(-1)[0];

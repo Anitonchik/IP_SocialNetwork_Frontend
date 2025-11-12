@@ -6,7 +6,7 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   const userId = JSON.parse(localStorage.getItem('userSettings')).userId
 
   const setMenu = (event) => {
-    if (userId === message.userId) {
+    if (userId === message.user.id) {
       setVisible(!visible)
     }
   }

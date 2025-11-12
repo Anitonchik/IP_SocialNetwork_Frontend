@@ -95,13 +95,18 @@ const ChatWindow = () => {
 
   const onSendEditMessage = async (text) => {
     if (editMessage) {
-      editMessage.messageText = text;
-      await messageModel.updatePost(editMessage.id, editMessage);
+      const newMessage = {
+        chatId: editMessage.chat.id,
+        userId: editMessage.user.id,
+        messageText: text,
+        createdAt: editMessage.createdAt
+      }
+      await messageModel.updatePost(editMessage.id, newMessage);
       fetchMessages();
       setIsEditing(false);
       setEditMessage(null);
     }
-    else {alert("чет не то")}
+    else {alert("Не удалось редактировать сообщение")}
   }
 
 

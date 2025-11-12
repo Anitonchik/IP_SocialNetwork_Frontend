@@ -12,7 +12,7 @@ const makeRequest = async (path, params, vars, method = "GET", data = null) => {
             options.body = JSON.stringify(data);
         }
         
-        //alert(`${URL}${path}${pathVariables}${requestParams}`)
+        alert(`${URL}${path}${pathVariables}${requestParams}`)
         const response = await fetch(`${URL}${path}${pathVariables}${requestParams}`, options);
         if (!response.ok) {
             throw new Error(`Response status: ${response?.status}`);
