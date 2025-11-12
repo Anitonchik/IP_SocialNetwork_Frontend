@@ -10,11 +10,11 @@ export default class UserModel {
     } 
 
     async getFollowers(id) {
-        return await getItem(PATH + "/followers/" + id);
+        return await getItem(PATH + "followers/" + id);
     } 
 
     async getSubscriptions(id) {
-        return await getItem(PATH + "/subscriptions/" + id);
+        return await getItem(PATH + "subscriptions/" + id);
     } 
 
     async createUser(userDTO) {

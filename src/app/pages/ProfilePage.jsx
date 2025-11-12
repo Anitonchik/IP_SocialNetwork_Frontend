@@ -39,7 +39,7 @@ const ProfilePage = () => {
   if (!loading) {
     return (
       <div>
-        <Profile user={user} model={model}/>
+        <Profile user={user}/>
         <PostsList user={user} />
       </div>
     );

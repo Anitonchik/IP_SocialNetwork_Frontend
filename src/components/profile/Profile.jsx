@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from "react";
+import UserModel from "../../../components/api/modelUser";
+import PostModel from "../../../components/api/modelPost";
 import "../../../styles.css";
 
-const Profile = ({user, model}) => {
+const Profile = ({user}) => {
+  const [usersPosts, setUsersPosts] = useState([]);
   const [userFollowers, setUserFollowers] = useState([]);
   const [userSubscriptions, setUserSubscriptions] = useState([]);
+  let userModel;
+  let postModel;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        setUserFollowers(await model.getFollowers(user.Id));
-        setUserSubscriptions(await model.getSubscriptions(user.Id));
+        userModel = new UserModel();
+        postModel = new PostModel();
+        setUserFollowers(await userModel.getFollowers(user.id));
+        setUserSubscriptions(await userModel.getSubscriptions(user.id));
+        setUsersPosts(await postModel.getAll("usersPosts/" + user.id))
       } catch (error) {
         console.error("Ошибка загрузки пользователя:", error);
       }
     };
 
     fetchUser();
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -33,7 +41,7 @@ const Profile = ({user, model}) => {
         <div className="d-flex profile-inf-firsttrio justify-content-md-between profile-inf me-0 me-md-5">
           <div>
             <p className="text-center main-text">Publications</p>
-            <p className="text-center main-text">{user.publications}</p>
+            <p className="text-center main-text">{usersPosts.length}</p>
           </div>
           <div>
             <p className="text-center main-text">Followers</p>
