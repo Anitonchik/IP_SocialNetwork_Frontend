@@ -17,6 +17,10 @@ export default class UserModel {
         return await getItem(PATH + "subscriptions/" + id);
     } 
 
+    async isSubscribed(id, subscribedUserId) {
+        return await getItem(PATH + "subscription/" + id + "/" + subscribedUserId);
+    } 
+
     async createUser(userDTO) {
         const user = await createItem(PATH, userDTO)
         return user;

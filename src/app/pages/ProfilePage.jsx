@@ -6,9 +6,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
-  let model;
-  let postModel;
-
   const { userId } = useParams(); 
   
   const [usersProfile, setUserProfile] = useState({});
@@ -26,8 +23,8 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        model = new UserModel();
-        postModel = new PostModel();
+        const model = new UserModel();
+        const postModel = new PostModel();
         const usersProfileData = await model.getUser(userId);
 
         //userId = JSON.parse(localStorage.getItem('userSettings')).userId;

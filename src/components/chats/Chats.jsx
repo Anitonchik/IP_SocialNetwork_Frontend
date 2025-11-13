@@ -42,8 +42,7 @@ const ChatList = () => {
 
   const fetchChats = async () => {
     try {
-      let response = await chatsModel.getAll("userschats", JSON.parse(localStorage.getItem('userSettings')).userId);
-      console.log(response)
+      let response = await chatsModel.getAll("userschats", JSON.parse(localStorage.getItem('userSettings')).userId);  
 
       if (response) {
       const updatedChats = await Promise.all(
@@ -64,7 +63,6 @@ const ChatList = () => {
               day: createdAt.getDate(),
               month: monthsShort[createdAt.getMonth()],
               time: createdAt.toTimeString().slice(0, 5),
-              //messages: messages,
               lastMessage: lastMessage,
               dayLastMessage: lastMessageDate.getDate(),
               monthLastMessage: monthsShort[lastMessageDate.getMonth()],
@@ -80,7 +78,6 @@ const ChatList = () => {
             day: createdAt.getDate(),
             month: monthsShort[createdAt.getMonth()],
             time: createdAt.toTimeString().slice(0, 5),
-            //messages: [],
             lastMessage: "chat created at",
             dayLastMessage: createdAt.getDate(),
             monthLastMessage: monthsShort[createdAt.getMonth()],
@@ -91,7 +88,6 @@ const ChatList = () => {
 
       ));
       setChats(updatedChats);
-      console.log(updatedChats);
     }} catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
     }

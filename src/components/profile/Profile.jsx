@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import UserModel from "../../../components/api/modelUser";
 import "../../../styles.css";
@@ -39,14 +40,18 @@ const Profile = ({user, posts}) => {
             <p className="text-center main-text">Publications</p>
             <p className="text-center main-text">{posts.length}</p>
           </div>
-          <div>
-            <p className="text-center main-text">Followers</p>
-            <p className="text-center main-text">{userFollowers.length}</p>
-          </div>
-          <div>
-            <p className="text-center main-text">Subscriptions</p>
-            <p className="text-center main-text">{userSubscriptions.length}</p>
-          </div>
+          <NavLink to="/users/followers">
+            <div>
+              <p className="text-center main-text">Followers</p>
+              <p className="text-center main-text">{userFollowers.length}</p>
+            </div>
+          </NavLink>
+          <NavLink to="/users/subscriptions">
+            <div>
+              <p className="text-center main-text">Subscriptions</p>
+              <p className="text-center main-text">{userSubscriptions.length}</p>
+            </div>
+          </NavLink>
         </div>
       </div>
       <div className="profile-info-discription">{user.userDescription}</div>

@@ -1,27 +1,43 @@
 import UserModel from "../../../components/api/modelUser.js";
-import {useEffect, useState, useParams} from "react";
-import UsersList from "./UsersList.jsx"
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom"
+import User from "./User.jsx"
 
 const UsersPage = () => {
-    const model = new UserModel();
     const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
     const [users, setUsers] = useState([]);
 
     const { usersListType } = useParams();
 
     useEffect(() => {
-        if (usersListType === "followers") {
-            setUsers()
-        }
+        const fetchUser = async () => {
+            try {
+                const userModel = new UserModel();
+                if (usersListType === "followers") {
+                    setUsers(await userModel.getFollowers(userId))
+                }
+                else if (usersListType === "subscriptions") {
+                    setUsers(await userModel.getSubscriptions(userId))
+                }
+                else if (usersListType === "users") {
+                    // вытаскивать просто пользователей
+                }
+            } catch (error) {
+              console.error("Ошибка загрузки пользователя:", error);
+            }
+          };
+
+          fetchUser();
+        
     }, [])
     
 
     return(
         <>
             {[...users].map((user) => (
-                <UsersList 
-                    otherUser={user}
-                ></UsersList>
+                <User 
+                    correspondenceUser={user}
+                ></User>
             ))}
         </>
     )
