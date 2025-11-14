@@ -4,23 +4,28 @@ import {useParams} from "react-router-dom"
 import User from "./User.jsx"
 
 const UsersPage = () => {
-    const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
+    const userModel = new UserModel();
+    //const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
     const [users, setUsers] = useState([]);
+    
 
-    const { usersListType } = useParams();
+    const { usersListType, userIdForList } = useParams();
+    
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userModel = new UserModel();
+                //userModel = new UserModel();
                 if (usersListType === "followers") {
-                    setUsers(await userModel.getFollowers(userId))
+                    setUsers(await userModel.getFollowers(userIdForList))
+                    
                 }
                 else if (usersListType === "subscriptions") {
-                    setUsers(await userModel.getSubscriptions(userId))
+                    setUsers(await userModel.getSubscriptions(userIdForList))
+                    alert(users)
                 }
                 else if (usersListType === "users") {
-                    // вытаскивать просто пользователей
+                    // TODO вытаскивать просто пользователей
                 }
             } catch (error) {
               console.error("Ошибка загрузки пользователя:", error);
@@ -28,19 +33,27 @@ const UsersPage = () => {
           };
 
           fetchUser();
+          console.log(users)
         
     }, [])
+
+    useEffect(() => {
+        return(
+            <>
+                {[...users].map((correspondenceUser) => (
+                    <User 
+                        userIdForList={userIdForList}
+                        correspondenceUser={correspondenceUser}
+                    ></User>
+                ))}
+                
+            </>
+        )
+    }, [users]); // срабатывает только при изменении списка
+    
     
 
-    return(
-        <>
-            {[...users].map((user) => (
-                <User 
-                    correspondenceUser={user}
-                ></User>
-            ))}
-        </>
-    )
+    
 }
 
 export default UsersPage;

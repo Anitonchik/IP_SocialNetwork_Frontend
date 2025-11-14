@@ -1,23 +1,24 @@
-import { deleteItem, getAllItems, createItem, updateItem } from "./client";
+import { deleteItem, getAllItems, getItem, createItem, updateItem } from "./client";
 
-const PATH = "chats";
+const PATH = "chats/";
 
 export default class ChatsModel { 
 
     async getAll(newPath, userId) {
         let elements;
         //alert(PATH + "/" + newPath + "/" + userId)
-        elements = await getAllItems(PATH + "/" + newPath + "/" + userId);
+        elements = await getAllItems(PATH + newPath + "/" + userId);
         return elements;
     } 
 
     async getChat(id) {
-        const chat = await getItem(PATH, id);
+        const chat = await getItem(PATH + "userschats/" + id);
         return chat;
     }
 
     async getChatOfTwoUsers(userId, otherUserId){
-        const chat = await getItem(userId, otherUserId)
+        //alert(PATH + "gd")
+        const chat = await getItem(PATH + "userschat/" + userId + "/" + otherUserId)
         return chat;
     }
 

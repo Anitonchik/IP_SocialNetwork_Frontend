@@ -40,13 +40,13 @@ const Profile = ({user, posts}) => {
             <p className="text-center main-text">Publications</p>
             <p className="text-center main-text">{posts.length}</p>
           </div>
-          <NavLink to="/users/followers">
+          <NavLink to={`/users/followers/${user.id}`}>
             <div>
               <p className="text-center main-text">Followers</p>
               <p className="text-center main-text">{userFollowers.length}</p>
             </div>
           </NavLink>
-          <NavLink to="/users/subscriptions">
+          <NavLink to={`/users/subscriptions/${user.id}`}>
             <div>
               <p className="text-center main-text">Subscriptions</p>
               <p className="text-center main-text">{userSubscriptions.length}</p>

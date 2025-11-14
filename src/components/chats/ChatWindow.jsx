@@ -20,22 +20,27 @@ const ChatWindow = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(null);
 
-
   let date = null;
   let showDate = true;
+
+  useEffect(() => {
+    if (!chat) return;
+    if (!user) return; 
+
+    setHeaderData(chat);
+    fetchMessages();
+  }, [user, chat]);
 
 
   const fetchMessages = async () => {
     try {
       const chatMessages = await messageModel.getMessagesFromChat(path, chat.id);
-      console.log(user)
 
       setMessages(chatMessages.map(element => {
         const createdAt = new Date(element.createdAt);
 
         if (user) {
           if (element.user.id == user.id) {
-            console.log(element.userId == user.id)
             return {
               ...element,
               createdAt: createdAt,
@@ -57,21 +62,12 @@ const ChatWindow = () => {
           }
         }
 
-        
-
       }))
       console.log(messages)
     } catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
     }
   };
-
-  useEffect(() => {
-    setHeaderData(chat);
-    fetchMessages();
-  }, []);
-
-
 
   const handleSendMessage = async (text) => {
     const createdAt = new Date();
@@ -147,18 +143,21 @@ const ChatWindow = () => {
 
 
   return (
-    <div className=" d-flex flex-column justify-content-center g-0" style={{ maxWidth: 1000, height: "85vh", margin: "auto" }}>
-      <div id="messages-block" className="container container-background align-items-center some-chat  m-0">
-        {messageList}
-      </div>
-      
-      <MessageInput 
-        onSend={handleSendMessage}
-        isEditing={isEditing}
-        editMessage={editMessage}
-        onSendEditMessage={onSendEditMessage}
-      />
-    </div>
+    <>
+      {messages && 
+        (<div className=" d-flex flex-column justify-content-center g-0" style={{ maxWidth: 1000, height: "85vh", margin: "auto" }}>
+        <div id="messages-block" className="container container-background align-items-center some-chat  m-0">
+          {messageList}
+        </div>
+        
+        <MessageInput 
+          onSend={handleSendMessage}
+          isEditing={isEditing}
+          editMessage={editMessage}
+          onSendEditMessage={onSendEditMessage}
+        />
+      </div>)}
+    </>
   );
 };
 

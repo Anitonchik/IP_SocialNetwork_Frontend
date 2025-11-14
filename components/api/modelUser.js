@@ -10,6 +10,7 @@ export default class UserModel {
     } 
 
     async getFollowers(id) {
+        alert("modelUser")
         return await getItem(PATH + "followers/" + id);
     } 
 
@@ -26,9 +27,14 @@ export default class UserModel {
         return user;
     }
 
-    async createSubscriptions(id, subscribedUserId) {
-        const subscribe = await createItem(PATH + id + "/" + subscribedUserId);
+    async createSubscription(id, userFollowingId) {
+        const subscribe = await updateItem(PATH + id + "/" + userFollowingId);
         return subscribe;
+    }
+
+    async deleteSubscription(id, userFollowingId) {
+        return await deleteItem(PATH + "subscription/" + id + "/" + userFollowingId);
+        
     }
 
     async updatePost(postId, postDTO) {
