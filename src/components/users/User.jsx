@@ -16,6 +16,8 @@ const User = ({userIdForList, correspondenceUser}) => {
   //let chatId = 0;
 
   useEffect(() => {
+    console.log(userIdForList)
+    console.log()
     const fetchUser = async() => {
       userModel = new UserModel();
       setUser(await userModel.getUser(userIdForList));
@@ -65,7 +67,7 @@ const User = ({userIdForList, correspondenceUser}) => {
 
     return (
         <>
-        {chat && (
+        {(chat && (userIdForList === userId)) && (
           <div
             onContextMenu={() => setDeleteButton(chat.id)}
             className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"

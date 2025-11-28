@@ -37,23 +37,24 @@ const UsersPage = () => {
         
     }, [])
 
-    useEffect(() => {
-        return(
-            <>
-                {[...users].map((correspondenceUser) => (
-                    <User 
-                        userIdForList={userIdForList}
-                        correspondenceUser={correspondenceUser}
-                    ></User>
-                ))}
-                
-            </>
-        )
-    }, [users]); // срабатывает только при изменении списка
+    /*useEffect(() => {
+        console.log("Users updated:", users);
+        
+    }, [users]); // срабатывает только при изменении списка*/
     
     
-
-    
+    alert(JSON.stringify(users));
+    return(
+        <>
+            {(users) && ([...users].map((correspondenceUser) => (
+                <User 
+                    userIdForList={userIdForList}
+                    correspondenceUser={correspondenceUser}
+                ></User>
+            )))}
+            
+        </>
+    )
 }
 
 export default UsersPage;
