@@ -1,18 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Post from "./Post.jsx";
 import PostModel from "../../../components/api/modelPost.js";
 import "../../../styles.css";
+import { data } from "react-router-dom";
 
 const PostList = () => {
+  const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
   const [posts, setPosts] = useState([]);
+  const currentPageRef = useRef(1);
+  const [fetching, setFetching] = useState(true); // true - подгружаем данные
+  const totalPagesRef = useRef(0);
+
   const [editingPost, setEditingPost] = useState(null);
   const model = new PostModel();
 
   useEffect(() => {
-    model.getAll("notUsersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId).then(setPosts);
-  }, []);
+    if (fetching) {
+      model.getAll(`posts/notUsersPosts/${userId}?page=${currentPageRef.current}&size=5` )
+      .then(data => {
+        totalPagesRef.current = data.totalPages;
+        setPosts(prev => [...prev, ...data.items]),
+        currentPageRef.current += 1})
+        .finally(() => setFetching(false));
+    }
+  }, [fetching]);
 
-  const deletePost = async (postId) => {
+  useEffect(() => {
+    document.addEventListener('scroll', scrollHandler)
+    return function() {
+      document.removeEventListener('scroll', scrollHandler)
+    }
+  }, [])
+
+  const scrollHandler = (e) => {
+    if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100)
+          && currentPageRef.current <= totalPagesRef.current) {
+      setFetching(true)
+    }
+  }
+
+
+  /*const deletePost = async (postId) => {
     await model.delete(postId);
     setPosts(posts.filter((p) => p.id !== postId));
     if (editingPost && editingPost.id === postId) {
@@ -20,14 +48,16 @@ const PostList = () => {
     }
   };
 
-  const editPost = (post) => setEditingPost(post);
+  
+
+  const editPost = (post) => setEditingPost(post);*/
 
   return (
     <>
 
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
-        {[... posts].reverse().map((post) => (
-          <Post key={post.id} post={post} onDelete={deletePost} onEdit={editPost} showButtons={false}/>
+        {[... posts].map((post) => (
+          <Post key={post.id} post={post} /*onDelete={deletePost} onEdit={editPost} */showButtons={false}/>
         ))}
       </div>
     </>

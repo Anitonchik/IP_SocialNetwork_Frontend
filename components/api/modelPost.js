@@ -1,10 +1,10 @@
-import { deleteItem, getAllItems, createItem, updateItem } from "./client";
+import { deleteItem, getAllItems, createItem, updateItem, request} from "./client";
 
 const PATH = "posts";
 
 export default class PostModel { 
 
-    async getAll(newPath) {
+    /*async getAll(newPath) {
         let elements;
         if (newPath != null){
             elements = await getAllItems(PATH + "/" + newPath);
@@ -14,7 +14,13 @@ export default class PostModel {
         }
         
         return elements;
+    } */
+
+    async getAll(path) {
+        const posts = await request(path)
+        return posts;
     } 
+    
 
     async createPost(postDTO) {
         const post = await createItem(PATH, postDTO)

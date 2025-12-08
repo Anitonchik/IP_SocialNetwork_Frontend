@@ -10,7 +10,6 @@ export default class UserModel {
     } 
 
     async getFollowers(id) {
-        alert("modelUser")
         return await getItem(PATH + "followers/" + id);
     } 
 

@@ -29,6 +29,25 @@ const makeRequest = async (path, params, vars, method = "GET", data = null) => {
     }
 };
 
+export const request = async (path) => {
+    try {
+        
+        const response = await fetch(`${URL}${path}`);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response?.status}`);
+        }
+        const json = await response.json();
+        console.debug(path, json);
+        return json;
+    } catch (error) {
+        if (error instanceof SyntaxError) {
+            throw new Error("There was a SyntaxError", error);
+        } else {
+            throw new Error("There was an error", error);
+        }
+    }
+}
+
 export const getAllItems = (path, params) => makeRequest(path, params);
 
 export const getItem = (path, id) => makeRequest(path, null, id);
