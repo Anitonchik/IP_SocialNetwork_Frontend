@@ -10,10 +10,10 @@ const User = ({userIdForList, correspondenceUser}) => {
   const [user, setUser] = useState(null);
   const [chat, setChat] = useState(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
+  const userId = localStorage.getItem('userId');
+
   let userModel = new UserModel();
   let chatModel = new ChatsModel();
-  //let chatId = 0;
 
   useEffect(() => {
     console.log(userIdForList)
@@ -27,7 +27,7 @@ const User = ({userIdForList, correspondenceUser}) => {
       }
     }
     fetchUser();
-  }, [isSubscribed, chat]);
+  }, []);
 
     const handleUnSubscribe = async () => {
       try {
@@ -74,11 +74,12 @@ const User = ({userIdForList, correspondenceUser}) => {
             style={{ maxWidth: 1000, padding: "10px 5px" }}
           >
             <NavLink
+            className="text-decoration-none"
             key={correspondenceUser.id}
             to={`/profile/${correspondenceUser.id}`}>
-              <div className="d-flex align-items-center profile-message">
+              <div className="d-flex align-items-center profile-message text-decoration-none">
                 <img className="profile" src={correspondenceUser.userAvatarURL} alt="ava" />
-                <p className="main-text justify-content-center mb-1">{correspondenceUser.userName}</p>
+                <p className="main-text justify-content-center mb-1 text-decoration-none">{correspondenceUser.userName}</p>
               </div>
             </NavLink>
 

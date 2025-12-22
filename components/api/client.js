@@ -40,7 +40,6 @@ const makeRequest = async (path, params, vars, method = "GET", data = null) => {
 export const request = async (path) => {
     try {
         const token = localStorage.getItem("token");
-        console.log(token) 
         
         const options = { 
             method: "GET", 

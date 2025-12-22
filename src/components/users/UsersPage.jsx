@@ -1,60 +1,123 @@
 import UserModel from "../../../components/api/modelUser.js";
-import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom"
-import User from "./User.jsx"
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import User from "./User.jsx";
 
 const UsersPage = () => {
     const userModel = new UserModel();
-    //const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
     const [users, setUsers] = useState([]);
-    
+    const currentPageRef = useRef(1);
+    const [fetching, setFetching] = useState(true);
+    const totalPagesRef = useRef(0);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isAlphabeticalSort, setIsAlphabeticalSort] = useState(false);
 
     const { usersListType, userIdForList } = useParams();
-    
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                //userModel = new UserModel();
-                if (usersListType === "followers") {
-                    setUsers(await userModel.getFollowers(userIdForList))
-                    
-                }
-                else if (usersListType === "subscriptions") {
-                    setUsers(await userModel.getSubscriptions(userIdForList))
-                    alert(users)
-                }
-                else if (usersListType === "users") {
-                    // TODO вытаскивать просто пользователей
-                }
-            } catch (error) {
-              console.error("Ошибка загрузки пользователя:", error);
-            }
-          };
+        setUsers([]);
+        currentPageRef.current = 1;
+        setFetching(true);
+    }, [searchTerm, usersListType, userIdForList, isAlphabeticalSort]);
 
-          fetchUser();
-          console.log(users)
-        
-    }, [])
+    useEffect(() => {
+        if (fetching) {
+            const fetchUsers = async () => {
+                try {
+                    let data;
+                    const page = currentPageRef.current;
+                    const size = 5;
+                    const userId = userIdForList;
+                    const search = encodeURIComponent(searchTerm.trim());
 
-    /*useEffect(() => {
-        console.log("Users updated:", users);
-        
-    }, [users]); // срабатывает только при изменении списка*/
-    
-    
-    alert(JSON.stringify(users));
-    return(
+                    if (usersListType === "followers") {
+                        data = await userModel.getUsers(`users/followers/${userId}`);
+                    }
+                    else if (usersListType === "subscriptions") {
+                        data = await userModel.getUsers(`users/subscriptions/${userId}`);
+                    }
+                    else if (usersListType === "users") {
+                       
+                            if (searchTerm.trim().length === 0) {
+                                if (isAlphabeticalSort) {
+                                    // Сортировка без поиска
+                                    data = await userModel.getUsers(`users/sort?page=${page}&size=${size}&userId=${userId}`);
+                                } else {
+                                    // Без сортировки и без поиска
+                                    data = await userModel.getUsers(`users/users?page=${page}&size=${size}&userId=${userId}`);
+                                }
+                            } else {
+                                if (isAlphabeticalSort) {
+                                    // Поиск + сортировка
+                                    data = await userModel.getUsers(`users/sort/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
+                                } else {
+                                    // Поиск без сортировки
+                                    data = await userModel.getUsers(`users/users/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
+                                }
+                            }
+                        
+                    }
+
+                    totalPagesRef.current = data?.totalPages || 0;
+                    setUsers(prev => [...prev, ...(data?.items || [])]);
+                    currentPageRef.current += 1;
+                } catch (error) {
+                    console.error("Ошибка загрузки пользователей:", error);
+                } finally {
+                    setFetching(false);
+                }
+            };
+
+            fetchUsers();
+        }
+    }, [fetching, searchTerm, usersListType, userIdForList, isAlphabeticalSort]);
+
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler);
+        return () => {
+            document.removeEventListener('scroll', scrollHandler);
+        };
+    }, []);
+
+    const scrollHandler = (e) => {
+        if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100)
+            && currentPageRef.current <= totalPagesRef.current) {
+            setFetching(true);
+        }
+    };
+
+    return (
         <>
-            {(users) && ([...users].map((correspondenceUser) => (
-                <User 
-                    userIdForList={userIdForList}
-                    correspondenceUser={correspondenceUser}
-                ></User>
-            )))}
-            
+        {(usersListType === "users") && (
+            <div className="d-flex flex-row container-background mb-3" style={{ maxWidth: 1000, padding: "10px 10px", margin: "auto", marginTop: '10px', }}>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by user name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {usersListType === "users" && (
+                    <button
+                        type="button"
+                        className="btn d-flex align-items-center"
+                        onClick={() => setIsAlphabeticalSort(prev => !prev)}
+                        title={isAlphabeticalSort ? "Отключить сортировку по алфавиту" : "Сортировать по алфавиту"}
+                    >
+                        <i className="bi bi-sort-alpha-down h2" style={{ color: '#fffacd' }}></i>
+                    </button>
+                )}
+            </div>)}
+
+            {users.length > 0 ? (
+                users.map((correspondenceUser) => (
+                    <User key={correspondenceUser.id} userIdForList={userIdForList} correspondenceUser={correspondenceUser} />
+                ))
+            ) : (
+                <div>There are no users...</div>
+            )}
         </>
-    )
-}
+    );
+};
 
 export default UsersPage;

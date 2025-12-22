@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
   const { userId } = useParams(); 
-  alert(userId)
   
   const [usersProfile, setUserProfile] = useState({});
   const [usersProfilePosts, setUsersProfilePosts] = useState([]);

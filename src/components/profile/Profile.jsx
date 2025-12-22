@@ -13,8 +13,8 @@ const Profile = ({user, posts}) => {
       try {
         userModel = new UserModel();
         
-        setUserFollowers(await userModel.getFollowers(user.id));
-        setUserSubscriptions(await userModel.getSubscriptions(user.id));
+        setUserFollowers(await userModel.getUsers(`users/followers/${user.id}`));
+        setUserSubscriptions(await userModel.getUsers(`users/subscriptions/${user.id}`));
       } catch (error) {
         console.error("Ошибка загрузки пользователя:", error);
       }
@@ -40,13 +40,13 @@ const Profile = ({user, posts}) => {
             <p className="text-center main-text">Publications</p>
             <p className="text-center main-text">{posts.length}</p>
           </div>
-          <NavLink to={`/users/followers/${user.id}`}>
+          <NavLink to={`/users/followers/${user.id}`} className="text-decoration-none">
             <div>
               <p className="text-center main-text">Followers</p>
               <p className="text-center main-text">{userFollowers.length}</p>
             </div>
           </NavLink>
-          <NavLink to={`/users/subscriptions/${user.id}`}>
+          <NavLink to={`/users/subscriptions/${user.id}`} className="text-decoration-none">
             <div>
               <p className="text-center main-text">Subscriptions</p>
               <p className="text-center main-text">{userSubscriptions.length}</p>

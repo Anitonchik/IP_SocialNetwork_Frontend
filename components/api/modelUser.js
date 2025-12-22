@@ -6,18 +6,12 @@ const PATH = "users/";
 export default class UserModel { 
 
     async getUser(id) {
-        console.log(id);
         let d = await getItem(PATH + id);
-        console.log(d)
         return d;
     } 
 
-    async getFollowers(id) {
-        return await getItem(PATH + "followers/" + id);
-    } 
-
-    async getSubscriptions(id) {
-        return await getItem(PATH + "subscriptions/" + id);
+    async getUsers(path) {
+        return await request(path);
     } 
 
     async isSubscribed(id, subscribedUserId) {
