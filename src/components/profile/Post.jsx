@@ -39,11 +39,3 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
 
 export default Post;
 
-/*<div className="post-container container-background" style={{ border: "1px solid #ccc", marginBottom: 15, padding: 10 }}>
-      <div className="container-background">
-        <img  src={post.postContentImage} alt="post" style={{ maxWidth: "100%" }} />
-      </div>
-      <p className="sub-text">{post.postContentText}</p>
-      <button onClick={() => onDelete(post.id)} style={{ marginRight: 10 }}>Delete</button>
-      <button onClick={() => onEdit(post)}>Update</button>
-    </div>*/

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "../../../styles.css";
 
 const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
-  // editingPost — объект поста, если идет редактирование, иначе null
 
   const [url, setUrl] = useState("");
   const [text, setText] = useState("");

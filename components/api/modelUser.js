@@ -1,11 +1,14 @@
-import { deleteItem, getAllItems, getItem, createItem, updateItem } from "./client";
+import { ConeStriped } from "react-bootstrap-icons";
+import { deleteItem, getAllItems, getItem, createItem, updateItem, request } from "./client";
 
 const PATH = "users/";
 
 export default class UserModel { 
 
     async getUser(id) {
+        console.log(id);
         let d = await getItem(PATH + id);
+        console.log(d)
         return d;
     } 
 

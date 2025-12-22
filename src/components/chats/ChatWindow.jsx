@@ -146,9 +146,9 @@ const ChatWindow = () => {
     <>
       {messages && 
         (<div className=" d-flex flex-column justify-content-center g-0" style={{ maxWidth: 1000, height: "85vh", margin: "auto" }}>
-        <div id="messages-block" className="container container-background align-items-center some-chat  m-0">
-          {messageList}
-        </div>
+          <div id="messages-block" className="container container-background align-items-center some-chat  m-0">
+            {messageList}
+          </div>
         
         <MessageInput 
           onSend={handleSendMessage}

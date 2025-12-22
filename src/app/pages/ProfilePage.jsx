@@ -7,29 +7,22 @@ import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
   const { userId } = useParams(); 
+  alert(userId)
   
   const [usersProfile, setUserProfile] = useState({});
   const [usersProfilePosts, setUsersProfilePosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /*это потом убрать, тк так я запоминаю id пользователя, который зашел в соцсеть*/
-  const userSettings = { userId: 1 };
-  localStorage.setItem('userSettings', JSON.stringify(userSettings));
-
-  /*const model = new UserModel();
-  const user = model.getUser(JSON.parse(localStorage.getItem('userSettings')).userId);
-  alert("page " + JSON.stringify(user))*/
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        console.log(userId)
         const model = new UserModel();
         const postModel = new PostModel();
         const usersProfileData = await model.getUser(userId);
+        
 
-        //userId = JSON.parse(localStorage.getItem('userSettings')).userId;
-
-        //alert(JSON.stringify(userData))
         setUserProfile(usersProfileData);
         setUsersProfilePosts(await postModel.getAll("usersPosts/" + userId))
         setLoading(false);

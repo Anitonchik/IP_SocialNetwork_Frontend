@@ -10,4 +10,9 @@
     <script type="module" src="./src/index.jsx"></script>
 </body>
 </html>
-<script src="script.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const userSettings = { userId: 1 };
+    localStorage.setItem('userSettings', JSON.stringify(userSettings));
+    });
+</script>

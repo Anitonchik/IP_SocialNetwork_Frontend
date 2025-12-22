@@ -10,15 +10,16 @@ const PostsList = ({user}) => {
   const [editingPost, setEditingPost] = useState(null);
 
   const currentPageRef = useRef(1);
-  const [fetching, setFetching] = useState(true); // true - подгружаем данные
+  const [fetching, setFetching] = useState(true);
   const totalPagesRef = useRef(0);
 
   const model = new PostModel()
 
   useEffect(() => {
-      if (user.id == JSON.parse(localStorage.getItem('userSettings')).userId) {
+    console.log(user)
+      if (user.id == JSON.parse(localStorage.getItem('userId'))) {
       setIsUsersPage(true);
-    } //ТУТ ПОМЕНЯТЬ USERID)
+    } 
       if (fetching) {
         model.getAll(`posts/usersPosts/${user.id}?page=${currentPageRef.current}&size=5` )
         .then(data => {

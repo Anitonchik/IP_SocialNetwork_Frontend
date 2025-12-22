@@ -1,15 +1,23 @@
 const URL = "http://localhost:8080/api/1.0/";
+const URLAnonym = "http://localhost:8080/"
 
 const makeRequest = async (path, params, vars, method = "GET", data = null) => {
     try {
         const requestParams = params ? `?${params}` : "";
         const pathVariables = vars ? `/${vars}` : "";
-        const options = { method };
-        const hasBody = (method === "POST" || method === "PUT") && data;
+
+        const token = localStorage.getItem("token");
         
-        if (hasBody) {
-            options.headers = { "Content-Type": "application/json;charset=utf-8" };
-            options.body = JSON.stringify(data);
+        const options = { 
+            method, 
+            headers: { "Authorization": token ? `Bearer ${token}` : undefined } 
+        };
+
+        const hasBody = (method === "POST" || method === "PUT") && data; 
+        
+        if (hasBody) { 
+            options.headers["Content-Type"] = "application/json;charset=utf-8"; 
+            options.body = JSON.stringify(data); 
         }
         
         //alert(`${URL}${path}${pathVariables}${requestParams}`)
@@ -31,8 +39,18 @@ const makeRequest = async (path, params, vars, method = "GET", data = null) => {
 
 export const request = async (path) => {
     try {
+        const token = localStorage.getItem("token");
+        console.log(token) 
         
-        const response = await fetch(`${URL}${path}`);
+        const options = { 
+            method: "GET", 
+            headers: { 
+                "Authorization": token ? `Bearer ${token}` : undefined 
+            } 
+        }; 
+        
+        const response = await fetch(`${URL}${path}`, options);
+
         if (!response.ok) {
             throw new Error(`Response status: ${response?.status}`);
         }
@@ -47,6 +65,33 @@ export const request = async (path) => {
         }
     }
 }
+
+export const requestAnonym = async (path, method = "GET", data = null) => {
+    try {
+        const options = { method };
+        const hasBody = (method === "POST" || method === "PUT") && data;
+        
+        if (hasBody) {
+            options.headers = { "Content-Type": "application/json;charset=utf-8" };
+            options.body = JSON.stringify(data);
+        }
+        
+        const response = await fetch(`${URLAnonym}${path}`, options);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response?.status}`);
+        }
+        const json = await response.json();
+        console.debug(path, json);
+        return json;
+    } catch (error) {
+        if (error instanceof SyntaxError) {
+            throw new Error("There was a SyntaxError", error);
+        } else {
+            throw new Error("There was an error", error);
+        }
+    }
+};
+
 
 export const getAllItems = (path, params) => makeRequest(path, params);
 
