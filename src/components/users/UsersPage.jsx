@@ -31,27 +31,23 @@ const UsersPage = () => {
                     const search = encodeURIComponent(searchTerm.trim());
 
                     if (usersListType === "followers") {
-                        data = await userModel.getUsers(`users/followers/${userId}`);
+                        setUsers(await userModel.getUsers(`users/followers/${userId}`));
                     }
                     else if (usersListType === "subscriptions") {
-                        data = await userModel.getUsers(`users/subscriptions/${userId}`);
+                        setUsers(await userModel.getUsers(`users/subscriptions/${userId}`));
                     }
                     else if (usersListType === "users") {
                        
                             if (searchTerm.trim().length === 0) {
                                 if (isAlphabeticalSort) {
-                                    // Сортировка без поиска
-                                    data = await userModel.getUsers(`users/sort?page=${page}&size=${size}&userId=${userId}`);
+                                    data = await userModel.getUsers(`users/users/sort?page=${page}&size=${size}&userId=${userId}`);
                                 } else {
-                                    // Без сортировки и без поиска
                                     data = await userModel.getUsers(`users/users?page=${page}&size=${size}&userId=${userId}`);
                                 }
                             } else {
                                 if (isAlphabeticalSort) {
-                                    // Поиск + сортировка
-                                    data = await userModel.getUsers(`users/sort/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
+                                    data = await userModel.getUsers(`users/users/sort/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
                                 } else {
-                                    // Поиск без сортировки
                                     data = await userModel.getUsers(`users/users/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
                                 }
                             }

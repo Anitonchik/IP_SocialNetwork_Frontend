@@ -16,7 +16,6 @@ const PostsList = ({user}) => {
   const model = new PostModel()
 
   useEffect(() => {
-    console.log(user)
       if (user.id == JSON.parse(localStorage.getItem('userId'))) {
       setIsUsersPage(true);
     } 
