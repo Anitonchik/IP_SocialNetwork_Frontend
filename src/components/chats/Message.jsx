@@ -3,10 +3,12 @@ import "../../../styles.css"
 
 const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   const [visible, setVisible] = new useState(false);
-  const userId = JSON.parse(localStorage.getItem('userSettings')).userId
+  const userId = localStorage.getItem('userId')
+  console.log(userId)
+  console.log(message.user.id)
 
   const setMenu = (event) => {
-    if (userId === message.user.id) {
+    if (userId == message.user.id) {
       setVisible(!visible)
     }
   }

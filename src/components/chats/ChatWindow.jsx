@@ -24,6 +24,12 @@ const ChatWindow = () => {
   let showDate = true;
 
   useEffect(() => {
+      if (localStorage.getItem("token") == null) {
+        navigate("/");
+      }
+    })
+
+  useEffect(() => {
     if (!chat) return;
     if (!user) return; 
 

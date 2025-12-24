@@ -12,6 +12,12 @@ const ProfilePage = () => {
   const [usersProfilePosts, setUsersProfilePosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+      if (localStorage.getItem("token") == null) {
+        navigate("/");
+      }
+    })
+    
 
   useEffect(() => {
     const fetchUser = async () => {

@@ -7,6 +7,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
   const [text, setText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     if (editingPost) {
@@ -22,7 +23,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
 
   const handleAdd = () => {
     if (url.trim() || text.trim()) {
-      onAddPost(JSON.parse(localStorage.getItem('userSettings')).userId, url, text);
+      onAddPost(userId, url, text);
       setUrl("");
       setText("");
       setIsCreating(false);
@@ -31,7 +32,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
 
   const handleUpdate = () => {
     if (url.trim() && text.trim() && editingPost) {
-      onUpdatePost(editingPost.id, JSON.parse(localStorage.getItem('userSettings')).userId, url, text);
+      onUpdatePost(editingPost.id, userId, url, text);
     }
   };
 

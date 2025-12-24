@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserModel from "../../../components/api/modelUser";
 import PostModel from "../../../components/api/modelPost";
 import "../../../styles.css"
@@ -11,6 +12,8 @@ const Settings = () => {
     const [userSubscriptions, setUserSubscriptions] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
 
+    const navigate = useNavigate();
+
 
     const [editedUser, setEditedUser] = useState({
         description: "",
@@ -19,11 +22,17 @@ const Settings = () => {
         username: ""
       });
 
+    
+    useEffect(() => {
+      if (localStorage.getItem("token") == null) {
+        navigate("/");
+      }
+    })
+
 
     useEffect(() => {
         setEditedUser({ ...user });
     }, [user]);
-
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -31,7 +40,7 @@ const Settings = () => {
             const model = new UserModel();
             const postModel = new PostModel();
 
-            const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
+            const userId = localStorage.getItem('userId');
             const userData = await model.getUser(userId);
             setUser(userData);
             setUserFollowers(await model.getFollowers(userId));
@@ -51,33 +60,11 @@ const Settings = () => {
         }));
     };
 
-    
-
-    /*const handleFieldClick = (fieldName) => {
-        setEditingField(fieldName);
-      };
-    
-      const handleInputChange = (e) => {
-        const { value } = e.target;
-        setEditedUser({ ...editedUser, [editingField]: value });
-      };
-    
-      const handleInputBlur = () => {
-        setEditingField(null);
-        if (editedUser[editingField] !== user[editingField]) {
-          onUpdateUser(editedUser);
-        }
-      };
-    
-      const handleInputKeyDown = (e) => {
-        if (e.key === "Enter") {
-          setEditingField(null);
-          if (editedUser[editingField] !== user[editingField]) {
-            onUpdateUser(editedUser);
-          }
-        }
-      };*/
-
+    const logout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        navigate("/");
+    }
 
     
     return (
@@ -130,6 +117,10 @@ const Settings = () => {
                         <div className="setting-text">Subscriptions</div>
                         <div className="setting-inf">{userSubscriptions.length}</div>
                     </div>
+                    <div className="d-flex justify-content-between setting">
+                        <div className="setting-inf" onClick={logout}>Logout</div>
+                    </div>
+                    
                 </div>
                 
             </div>

@@ -7,11 +7,7 @@ import { List } from 'react-bootstrap-icons';
 
 export const Header = ({ headerData }) => {
     const navigate = useNavigate();
-
-    /*localStorage.removeItem("token");
-    localStorage.removeItem("userId");*/
-
-
+    
     const [isOpen, setIsOpen] = useState(false);
 
     const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
@@ -32,8 +28,7 @@ export const Header = ({ headerData }) => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
-    };
-
+    };    
   
     useEffect(() => {
         const handleResize = () => {

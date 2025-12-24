@@ -39,25 +39,12 @@ const PostList = () => {
     }
   }
 
-
-  /*const deletePost = async (postId) => {
-    await model.delete(postId);
-    setPosts(posts.filter((p) => p.id !== postId));
-    if (editingPost && editingPost.id === postId) {
-      setEditingPost(null);
-    }
-  };
-
-  
-
-  const editPost = (post) => setEditingPost(post);*/
-
   return (
     <>
 
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
         {[... posts].map((post) => (
-          <Post key={post.id} post={post} /*onDelete={deletePost} onEdit={editPost} */showButtons={false}/>
+          <Post key={post.id} post={post} showButtons={false}/>
         ))}
       </div>
     </>

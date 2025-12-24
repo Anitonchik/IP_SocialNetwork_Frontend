@@ -21,8 +21,14 @@ const ChatList = () => {
   const chatsModel = new ChatsModel();
   let userModel = null;
   let messageModel = null;
-  const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
+  const userId = localStorage.getItem('userId');
 
+
+  useEffect(() => {
+      if (localStorage.getItem("token") == null) {
+        navigate("/");
+      }
+    })
 
   useEffect(() => {
     userModel = new UserModel();
@@ -45,11 +51,10 @@ const ChatList = () => {
 
   const fetchChats = async () => {
     try {
-      let response = await chatsModel.getAll("userschats", JSON.parse(localStorage.getItem('userSettings')).userId);  
+      let response = await chatsModel.getAll("userschats", userId);  
 
       if (response) {
-      const updatedChats = await Promise.all(
-        response.map(async (element) => {
+        const updatedChats = response.map(async (element) => {
         const createdAt = new Date(element.createdAt);
         
         let messages = await messageModel.getMessagesFromChat("fromChat", element.id)
@@ -89,7 +94,7 @@ const ChatList = () => {
         }
       }
 
-      ));
+      );
       setChats(updatedChats);
     }} catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
@@ -130,7 +135,7 @@ const ChatList = () => {
         <input
           type="text"
           className="form-control"
-          placeholder="Поиск чатов по имени..."
+          placeholder="Search chats by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
