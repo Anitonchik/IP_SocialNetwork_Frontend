@@ -7,7 +7,7 @@ import "../../../styles.css"
 
 const Settings = () => {
     const [user, setUser] = useState({});
-    const [usersProfilePosts, setUsersProfilePosts] = useState([]);
+    const [usersProfilePosts, setUsersProfilePosts] = useState(null);
     const [userFollowers, setUserFollowers] = useState([]);
     const [userSubscriptions, setUserSubscriptions] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -39,13 +39,13 @@ const Settings = () => {
           try {
             const model = new UserModel();
             const postModel = new PostModel();
-
             const userId = localStorage.getItem('userId');
             const userData = await model.getUser(userId);
+            const posts = await postModel.getAll(`posts/usersPosts/${userId}?page=${1}&size=5`);
             setUser(userData);
-            setUserFollowers(await model.getFollowers(userId));
-            setUserSubscriptions(await model.getSubscriptions(userId));
-            setUsersProfilePosts(await postModel.getAll("usersPosts/" + userId))
+            setUserFollowers(await model.getUsers(`users/followers/${userId}`));
+            setUserSubscriptions(await model.getUsers(`users/subscriptions/${userId}`));
+            setUsersProfilePosts(posts.totalItems)
           } catch (error) {
             console.error("Ошибка загрузки пользователя:", error);
           }
@@ -107,7 +107,7 @@ const Settings = () => {
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Publications</div>
-                        <div className="setting-inf">{usersProfilePosts.length}</div>
+                        <div className="setting-inf">{usersProfilePosts}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Followers</div>

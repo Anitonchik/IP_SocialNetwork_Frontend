@@ -6,7 +6,9 @@ import {useEffect, useState} from "react";
 
 
 
-const User = ({userIdForList, correspondenceUser}) => {
+const User = ({userIdForList, correspondenceUser, handleDelete}) => {
+  const [visible, setVisible] = new useState(false);
+
   const [user, setUser] = useState(null);
   const [chat, setChat] = useState(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -15,13 +17,12 @@ const User = ({userIdForList, correspondenceUser}) => {
   let userModel = new UserModel();
   let chatModel = new ChatsModel();
 
-  useEffect(() => {
-    console.log(userIdForList)
-    console.log()
+  useEffect(() => {    
     const fetchUser = async() => {
       userModel = new UserModel();
       setUser(await userModel.getUser(userIdForList));
-      if (userIdForList === userId) {
+
+      if (userIdForList === userId && localStorage.getItem("role") === 'USER') {
         setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id))
         setIsSubscribed(await userModel.isSubscribed(userId, correspondenceUser.id));
       }
@@ -64,10 +65,26 @@ const User = ({userIdForList, correspondenceUser}) => {
       fetchUser();
     }
 
+    // это для админа 
+
+    const setMenu = (event) => {
+      if (userIdForList != localStorage.getItem("userId")) {
+        setVisible(!visible)        
+      }
+    }
+
+    const deleteUser = () => {
+      alert("delete")
+      handleDelete(userIdForList)
+      setVisible(!visible)
+    };
+
+    
+
 
     return (
         <>
-        {(chat && (userIdForList === userId)) && (
+        {(chat && (userIdForList === userId) && localStorage.getItem("role") === "USER") && (
           <div
             onContextMenu={() => setDeleteButton(chat.id)}
             className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
@@ -83,9 +100,10 @@ const User = ({userIdForList, correspondenceUser}) => {
               </div>
             </NavLink>
 
-            {(userIdForList === userId) && (
-
+            {(userIdForList === userId && localStorage.getItem("role") === 'USER') && (
+            
               <div className="d-flex flex-row align-items-center gap-3 text-end pe-1 disc-time-text">
+                
                 <div className="flex-column">
                   {(isSubscribed) && 
                     (<button id="addSubscribeButton" className="container-background sub-text button-sbc" onClick={handleUnSubscribe}>Subscribed</button>)
@@ -106,6 +124,30 @@ const User = ({userIdForList, correspondenceUser}) => {
             )}
             
           </div>)}
+
+          {(localStorage.getItem("role") === "ADMIN") && (
+            <div
+              onContextMenu={() => setMenu()}
+              className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
+              style={{ maxWidth: 1000, padding: "10px 5px" }}
+            >
+              <NavLink
+              className="text-decoration-none"
+              key={correspondenceUser.id}
+              to={`/profile/${correspondenceUser.id}`}>
+                <div className="d-flex align-items-center profile-message text-decoration-none">
+                  <img className="profile" src={correspondenceUser.userAvatarURL} alt="ava" />
+                  <p className="main-text justify-content-center mb-1 text-decoration-none">{correspondenceUser.userName}</p>
+                </div>
+              </NavLink>
+              
+            </div>
+          )}
+          {(visible) && (
+            <div className="message-menu gap-5">
+              <div onClick={() => deleteUser()}>Delete</div>
+            </div>
+          )}
       </>
 )}
 

@@ -48,47 +48,77 @@ export const Header = ({ headerData }) => {
     const chatId = isChatPage ? location.pathname.split('/')[2] : null;   
     
     if (localStorage.getItem("token") != null) {
-        const userId = localStorage.getItem("userId");
+         const userId = localStorage.getItem("userId");
+        if (localStorage.getItem("role") === 'USER') {
 
-        return (
+            return (
+                <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
+                    <nav className="d-flex gap-1 gap-md-5 gap-2 flex-row align-items-center">
+                        <NavLink className="main-text align-items-center" to="/">
+                            Main
+                        </NavLink>
+
+                        {(isChatPage && headerData) && (
+                                <div className="d-flex align-items-center gap-3" onClick={() => navigate(`/profile/${headerData.user.id}`)}> 
+                                    <img 
+                                        src={headerData.correspondenceUser.userAvatarURL} 
+                                        alt={"avatar"}
+                                        className="profile d-flex align-items-center"
+                                    />
+                                    <div className="main-text">{headerData.correspondenceUser.userName}</div>
+                                </div>
+                            )}
+                    </nav>
+                    
+                    <nav className="main-nav flex-end">
+                        <List 
+                            size={35} 
+                            className="hamburger" 
+                            onClick={toggleMenu}
+                        />
+                        <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
+                            <NavLink className="main-text nav-list-link" to="/settings">
+                                Settings
+                            </NavLink>
+                            <NavLink className="main-text nav-list-link" to="/chats">
+                                Chats
+                            </NavLink>
+                            <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
+                                Profile
+                            </NavLink>
+                        </ul>
+                    </nav>
+                </header>
+            );
+        }
+        else {
+            return (
             <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
-                <nav className="d-flex gap-1 gap-md-5 gap-2 flex-row align-items-center">
-                    <NavLink className="main-text align-items-center" to="/">
-                        Main
-                    </NavLink>
+                    <nav className="d-flex gap-1 gap-md-5 gap-2 flex-row align-items-center">
+                        <NavLink className="main-text align-items-center" to={`/profile/${userId}`}>
+                            Posts
+                        </NavLink>
 
-                    {(isChatPage && headerData) && (
-                            <div className="d-flex align-items-center gap-3" onClick={() => navigate(`/profile/${headerData.user.id}`)}> 
-                                <img 
-                                    src={headerData.correspondenceUser.userAvatarURL} 
-                                    alt={"avatar"}
-                                    className="profile d-flex align-items-center"
-                                />
-                                <div className="main-text">{headerData.correspondenceUser.userName}</div>
-                            </div>
-                        )}
-                </nav>
-                
-                <nav className="main-nav flex-end">
-                    <List 
-                        size={35} 
-                        className="hamburger" 
-                        onClick={toggleMenu}
-                    />
-                    <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
-                        <NavLink className="main-text nav-list-link" to="/settings">
-                            Settings
-                        </NavLink>
-                        <NavLink className="main-text nav-list-link" to="/chats">
-                            Chats
-                        </NavLink>
-                        <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
-                            Profile
-                        </NavLink>
-                    </ul>
-                </nav>
-            </header>
-        );
+                    </nav>
+                    
+                    <nav className="main-nav flex-end">
+                        <List 
+                            size={35} 
+                            className="hamburger" 
+                            onClick={toggleMenu}
+                        />
+                        <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
+                            <NavLink className="main-text nav-list-link" to="/settings">
+                                Settings
+                            </NavLink>
+                            <NavLink className="main-text nav-list-link" to={`/users`}>
+                                Users
+                            </NavLink>
+                        </ul>
+                    </nav>
+                </header>
+            )
+        }
     }
     else {
         return (

@@ -16,16 +16,26 @@ const PostsList = ({user}) => {
   const model = new PostModel()
 
   useEffect(() => {
-      if (user.id == JSON.parse(localStorage.getItem('userId'))) {
+      if (user.id == localStorage.getItem('userId')) {
       setIsUsersPage(true);
     } 
       if (fetching) {
-        model.getAll(`posts/usersPosts/${user.id}?page=${currentPageRef.current}&size=5` )
-        .then(data => {
-          totalPagesRef.current = data.totalPages;
-          setPosts(prev => [...prev, ...data.items]),
-          currentPageRef.current += 1})
-          .finally(() => setFetching(false));
+        if (localStorage.getItem('role') === "USER") {
+          model.getAll(`posts/usersPosts/${user.id}?page=${currentPageRef.current}&size=5` )
+          .then(data => {
+            totalPagesRef.current = data.totalPages;
+            setPosts(prev => [...prev, ...data.items]),
+            currentPageRef.current += 1})
+            .finally(() => setFetching(false));
+        }
+        else if (localStorage.getItem('role') === "ADMIN") {
+          model.getAll(`posts?page=${currentPageRef.current}&size=5` )
+          .then(data => {
+            totalPagesRef.current = data.totalPages;
+            setPosts(prev => [...prev, ...data.items]),
+            currentPageRef.current += 1})
+            .finally(() => setFetching(false));
+        }
       }
     }, [fetching]);
   
@@ -80,7 +90,7 @@ const PostsList = ({user}) => {
 
   return (
     <>
-    {(isUsersPage) && (
+    {(isUsersPage || localStorage.getItem('role') === "ADMIN") && (
       <>
         <PostEditor
           onAddPost={addPost}
@@ -98,7 +108,7 @@ const PostsList = ({user}) => {
       </>
     )}
 
-    {(!isUsersPage) && (
+    {(!isUsersPage && localStorage.getItem('role') != "ADMIN") && (
       <div style={{ maxWidth: 1000, margin: "10px auto" }}>
       {[... posts].map((post) => (
         

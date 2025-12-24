@@ -38,8 +38,7 @@ export default class UserModel {
         return post;
     }
 
-     async delete(item) {
-        const _id = item?.id || item;
-        await deleteItem(PATH, _id);
+     async delete(id) {
+        await deleteItem(PATH + id);
     }
 }

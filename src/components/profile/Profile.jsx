@@ -35,6 +35,7 @@ const Profile = ({user, posts}) => {
           <img className="profile-info-img" src={user.userAvatarURL} alt="avatar" />
           <div className="main-text">{user.userName}</div>
         </div>
+        { (localStorage.getItem("role") === 'USER') && (
         <div className="d-flex profile-inf-firsttrio justify-content-md-between profile-inf me-0 me-md-5">
           <div>
             <p className="text-center main-text">Publications</p>
@@ -53,6 +54,7 @@ const Profile = ({user, posts}) => {
             </div>
           </NavLink>
         </div>
+        )}
       </div>
       <div className="profile-info-discription">{user.userDescription}</div>
     </div>

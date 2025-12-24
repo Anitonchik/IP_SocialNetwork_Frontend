@@ -12,9 +12,11 @@ export default class AuthModel {
         }
         try {
             const jwtToken = await requestAnonym("login", "POST", dto)
-            //console.log(jwtToken.jwt);
+            
             localStorage.setItem("token", jwtToken.jwt);
             localStorage.setItem("userId", jwtToken.id);
+            localStorage.setItem("role", jwtToken.role);
+            console.log(localStorage.getItem('role'));
         }
         catch (ex) {
             alert("Ошибка выхода в систему")
@@ -27,6 +29,7 @@ export default class AuthModel {
             const jwtToken = await requestAnonym("signup", "POST", dto)
             localStorage.setItem("token", jwtToken.jwt);
             localStorage.setItem("userId", jwtToken.id);
+            localStorage.setItem("role", jwtToken.role);
         }
         catch (ex) {
             alert("Ошибка регистрации")

@@ -37,7 +37,8 @@ const AuthPage = () => {
   const handleLoginSubmit = (e) => {
     e.preventDefault();    
     authModel.login(loginData.userName, loginData.password)
-    setTimeout(() => { navigate("/main"); }, 1);
+    
+    setTimeout(() => { navigate("/main"); }, 0);
   };
 
   const handleRegisterSubmit = (e) => {
