@@ -39,7 +39,10 @@ const Settings = () => {
           try {
             const model = new UserModel();
             const postModel = new PostModel();
+
             const userId = localStorage.getItem('userId');
+            console.log(userId)
+
             const userData = await model.getUser(userId);
             const posts = await postModel.getAll(`posts/usersPosts/${userId}?page=${1}&size=5`);
             setUser(userData);
@@ -63,6 +66,7 @@ const Settings = () => {
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
+        localStorage.removeItem("role");
         navigate("/");
     }
 

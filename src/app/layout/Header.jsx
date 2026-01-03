@@ -4,9 +4,11 @@ import "../../../styles.css"
 import "./Header.css"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { List } from 'react-bootstrap-icons';
+import { useMediaQuery } from 'react-responsive';
 
 export const Header = ({ headerData }) => {
     const navigate = useNavigate();
+    const isMobile = useMediaQuery({ maxWidth: 768 });
     
     const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +49,7 @@ export const Header = ({ headerData }) => {
     const isChatPage = location.pathname.startsWith('/somechat/');
     const chatId = isChatPage ? location.pathname.split('/')[2] : null;   
     
-    if (localStorage.getItem("token") != null) {
+    if (isAuth) {
          const userId = localStorage.getItem("userId");
         if (localStorage.getItem("role") === 'USER') {
 
@@ -69,25 +71,35 @@ export const Header = ({ headerData }) => {
                                 </div>
                             )}
                     </nav>
-                    
-                    <nav className="main-nav flex-end">
-                        <List 
-                            size={35} 
-                            className="hamburger" 
-                            onClick={toggleMenu}
-                        />
-                        <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
-                            <NavLink className="main-text nav-list-link" to="/settings">
-                                Settings
-                            </NavLink>
-                            <NavLink className="main-text nav-list-link" to="/chats">
-                                Chats
-                            </NavLink>
-                            <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
-                                Profile
-                            </NavLink>
-                        </ul>
-                    </nav>
+                    {(isMobile) && (
+                        <>
+                        <nav className="main-nav flex-end">
+                            <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
+                                <NavLink className="main-text nav-list-link" to="/settings">
+                                    Settings
+                                </NavLink>
+                                <NavLink className="main-text nav-list-link" to="/chats">
+                                    Chats
+                                </NavLink>
+                                <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
+                                    Profile
+                                </NavLink>
+                            </ul>
+                        </nav>
+                        <nav>
+                            <List 
+                                size={35} 
+                                className="hamburger" 
+                                onClick={toggleMenu}
+                            />
+                            <ul>
+                                <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
+                                    Profile
+                                </NavLink>
+                            </ul>
+                        </nav>
+                        </>
+                    )}
                 </header>
             );
         }
@@ -145,3 +157,22 @@ export const Header = ({ headerData }) => {
         )
     };
 };
+
+/*<nav className="main-nav flex-end">
+                            <List 
+                                size={35} 
+                                className="hamburger" 
+                                onClick={toggleMenu}
+                            />
+                            <ul className={`nav-list ${isOpen ? 'open' : ''}`}>
+                                <NavLink className="main-text nav-list-link" to="/settings">
+                                    Settings
+                                </NavLink>
+                                <NavLink className="main-text nav-list-link" to="/chats">
+                                    Chats
+                                </NavLink>
+                                <NavLink className="main-text nav-list-link" to={`/profile/${userId}`}>
+                                    Profile
+                                </NavLink>
+                            </ul>
+                        </nav>*/

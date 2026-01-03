@@ -23,7 +23,7 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
 
   const handleAdd = () => {
     if (url.trim() || text.trim()) {
-      onAddPost(userId, url, text);
+      onAddPost(userId, url, text, new Date());
       setUrl("");
       setText("");
       setIsCreating(false);
@@ -31,13 +31,15 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
   };
 
   const handleUpdate = () => {
-    if (url.trim() && text.trim() && editingPost) {
-      onUpdatePost(editingPost.id, userId, url, text);
+    if ((url.trim() || text.trim()) && editingPost) {
+      onUpdatePost(editingPost.id, userId, url, text, new Date());
     }
   };
 
   const handleCancel = () => {
     cancelEdit();
+    setIsEditing(false);
+    setIsCreating(false);
   };
 
   return (
@@ -62,8 +64,6 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
 
       {(isCreating || isEditing) && (
         <>
-
-        {(isCreating) && (
           <div className="adding-post-textareas" style={{ width: "100%", marginTop: 10 }}>
             <textarea
               id="url-input"
@@ -83,26 +83,9 @@ const PostEditor = ({ onAddPost, onUpdatePost, editingPost, cancelEdit }) => {
             />
             
           </div>
-        )}
+        
 
-          {(isEditing) && (
-            <div className="adding-post-textareas" style={{ width: "100%", marginTop: 10 }}>
-              <textarea
-                id="url-input"
-                style={{ width: "100%" }}
-                rows={5}
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-              />
-              <textarea
-                id="text-input"
-                style={{ width: "100%" }}
-                rows={5}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              />
-            </div>
-          )}
+          
 
           {!isEditing && (
             

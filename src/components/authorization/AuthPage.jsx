@@ -34,23 +34,24 @@ const AuthPage = () => {
     setRegisterData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();    
-    authModel.login(loginData.userName, loginData.password)
+    await authModel.login(loginData.userName, loginData.password)
     
     setTimeout(() => { navigate("/main"); }, 0);
   };
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
 
     if (registerData.password !== registerData.confirmPassword) {
-      alert('Пароли не совпадают!');
+      alert("Passwords don't match!");
       return;
     }
 
     console.log('Register data:', registerData);
-    authModel.register(registerData);
+    await authModel.register(registerData);
+    setTimeout(() => { navigate("/main"); }, 0);
   };
 
   return (
@@ -93,7 +94,7 @@ const AuthPage = () => {
             <input
               className="input-login"
               placeholder="First Name"
-              name="Frist Name"
+              name="firstName"
               value={registerData.firstName}
               onChange={handleRegisterChange}
               required

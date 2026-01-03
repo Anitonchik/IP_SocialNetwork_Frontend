@@ -5,7 +5,7 @@ import "../../../styles.css";
 import { data } from "react-router-dom";
 
 const PostList = () => {
-  const userId = JSON.parse(localStorage.getItem('userSettings')).userId;
+  const userId = localStorage.getItem('userId');
   const [posts, setPosts] = useState([]);
   const currentPageRef = useRef(1);
   const [fetching, setFetching] = useState(true); // true - подгружаем данные

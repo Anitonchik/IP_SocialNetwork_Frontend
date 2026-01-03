@@ -92,7 +92,7 @@ const UsersPage = () => {
     //для админа
 
     const handleDelete = async (id) => {
-        if (id != localStorage.getItem("role") === 'ADMIN') {
+        if (id != localStorage.getItem("userId")) {
             await userModel.delete(id);
             setUsers([])
             currentPageRef.current = 1;

@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles.css";
 import { useNavigate } from "react-router-dom";
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 
 const Post = ({ post, onDelete, onEdit, showButtons }) => {
-
+  const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const [postsDesc, setPostsDesc] = useState("");
+  const [isEdited, setIsEdited] = useState(false);
   const navigate = useNavigate()
+
+  useEffect(() => {
+    updPostAddDate();
+  }, [])
+
+  const updPostAddDate = () => {
+    const postDate = new Date(post.createdAt);
+    const day = postDate.getDate();
+    const month = monthsShort[postDate.getMonth()];
+    const time = postDate.toTimeString().slice(0, 5);
+    setPostsDesc(`${day} ${month}  ${time}`)
+  }
 
   return (
   <div>
@@ -13,7 +28,7 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
 
         <div className="d-flex justify-content-between align-items-center container container-background" style={{gap: '10px'}}>
             <div className="d-flex align-items-center justify-content-center cursor-pointer"  style={{gap: '10px'}} onClick={() => navigate(`/profile/${post.user.id}`)}>
-                <img className="post-header-img" src={post.user.userAvatarURL} alt="first story" />
+                <img className="post-header-img" src={(post.user.userAvatarURL.length > 0) ? post.user.userAvatarURL : defaultAvatar} alt="first story" />
                 <p className="main-text">{post.user.userName}</p>
             </div>
             {showButtons ? (
@@ -30,6 +45,7 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
             </div>
           )}
             {post.postTextContent && (<p className="sub-text mt-2">{post.postTextContent}</p>)}
+            <div className="message-chat-time">{(post.isEdited ? "edited" : "") + " " + postsDesc}</div>
         </div>
         
     </div>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import UserModel from "../../../components/api/modelUser";
 import "../../../styles.css";
 
-const Profile = ({user, posts}) => {
+const Profile = ({user, postsTotalItems}) => {
   const [userFollowers, setUserFollowers] = useState([]);
   const [userSubscriptions, setUserSubscriptions] = useState([]);
   let userModel;
@@ -21,7 +21,7 @@ const Profile = ({user, posts}) => {
     };
 
     fetchUser();
-  }, [user, posts]);
+  }, [user, postsTotalItems]);
 
   return (
     <>
@@ -39,7 +39,7 @@ const Profile = ({user, posts}) => {
         <div className="d-flex profile-inf-firsttrio justify-content-md-between profile-inf me-0 me-md-5">
           <div>
             <p className="text-center main-text">Publications</p>
-            <p className="text-center main-text">{posts.length}</p>
+            <p className="text-center main-text">{postsTotalItems}</p>
           </div>
           <NavLink to={`/users/followers/${user.id}`} className="text-decoration-none">
             <div>

@@ -13,7 +13,7 @@ const ChatList = () => {
 
   const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
-  const [visible, setVisible] = new useState(false);
+  const [visible, setVisible] = useState(false);
   const [visibleDeleteChatId, setVisibleDeleteChatId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAlphabeticalSort, setIsAlphabeticalSort] = useState(false);
@@ -54,20 +54,22 @@ const ChatList = () => {
       let response = await chatsModel.getAll("userschats", userId);  
 
       if (response) {
-        const updatedChats = response.map(async (element) => {
-        const createdAt = new Date(element.createdAt);
         
-        let messages = await messageModel.getMessagesFromChat("fromChat", element.id)
-        const messagesArray = Object.values(messages);
-        messagesArray.sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        if (messagesArray) {
-          let lastMessage = messagesArray.slice(-1)[0];
-          if (lastMessage) {
-            let lastMessageDate = new Date(lastMessage.createdAt)
-            return {
+        const updatedChats = [];
+        for (const element of response) {
+          const createdAt = new Date(element.createdAt);
+          
+          let messages = await messageModel.getMessagesFromChat("fromChat", element.id);
+          const messagesArray = Object.values(messages);
+          messagesArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+          
+          let processedElement;
+          if (messagesArray.length > 0) {
+            const lastMessage = messagesArray[messagesArray.length - 1];
+            const lastMessageDate = new Date(lastMessage.createdAt);
+            processedElement = {
               ...element,
-              createdAt: createdAt,
+              createdAt,
               day: createdAt.getDate(),
               month: monthsShort[createdAt.getMonth()],
               time: createdAt.toTimeString().slice(0, 5),
@@ -76,25 +78,22 @@ const ChatList = () => {
               monthLastMessage: monthsShort[lastMessageDate.getMonth()],
               timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
             };
+          } else {
+            processedElement = {
+              ...element,
+              createdAt,
+              day: createdAt.getDate(),
+              month: monthsShort[createdAt.getMonth()],
+              time: createdAt.toTimeString().slice(0, 5),
+              lastMessage: "chat created at",
+              dayLastMessage: createdAt.getDate(),
+              monthLastMessage: monthsShort[createdAt.getMonth()],
+              timeLastMessage: createdAt.toTimeString().slice(0, 5),
+            };
           }
+          
+          updatedChats.push(processedElement);
         }
-        
-        else {
-          return {
-            ...element,
-            createdAt: createdAt,
-            day: createdAt.getDate(),
-            month: monthsShort[createdAt.getMonth()],
-            time: createdAt.toTimeString().slice(0, 5),
-            lastMessage: "chat created at",
-            dayLastMessage: createdAt.getDate(),
-            monthLastMessage: monthsShort[createdAt.getMonth()],
-            timeLastMessage: createdAt.toTimeString().slice(0, 5),
-          }
-        }
-      }
-
-      );
       setChats(updatedChats);
     }} catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
@@ -114,6 +113,7 @@ const ChatList = () => {
   }
 
   const handleUsersClick = () => {
+    console.log(`/users/users/${user.id}`)
     navigate(`/users/users/${user.id}`);
 };
 

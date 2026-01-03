@@ -1,4 +1,4 @@
-import { deleteItem, getAllItems, getItem, createItem, updateItem } from "./client";
+import { deleteItem, getAllItems, getItem, createItem, updateItem, request } from "./client";
 
 const PATH = "chats/";
 
@@ -15,6 +15,11 @@ export default class ChatsModel {
         const chat = await getItem(PATH + "userschats/" + id);
         return chat;
     }
+
+     async request(path) {
+        const responce = await request(path)
+        return responce;
+     } 
 
     async getChatOfTwoUsers(userId, otherUserId){
         //alert(PATH + "gd")

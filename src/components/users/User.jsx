@@ -3,8 +3,7 @@ import ChatsModel from "../../../components/api/modelChats.js";
 import { NavLink } from "react-router-dom";
 import "../../../styles.css";
 import {useEffect, useState} from "react";
-
-
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 const User = ({userIdForList, correspondenceUser, handleDelete}) => {
   const [visible, setVisible] = new useState(false);
@@ -23,7 +22,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
       setUser(await userModel.getUser(userIdForList));
 
       if (userIdForList === userId && localStorage.getItem("role") === 'USER') {
-        setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id))
+        //setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id))
         setIsSubscribed(await userModel.isSubscribed(userId, correspondenceUser.id));
       }
     }
@@ -50,15 +49,19 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 
     const handleWrite = () => {
       const fetchUser = async() => {
-        setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id));
-        if (!chat) {
+        const isChatExist = await chatModel.request(`userschats/checkavailability/${userId}/${correspondenceUser.id}`)
+        if (isChatExist) {
+          setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id));
+        }
+        else {
+          alert("false")
           // испрв
           const newChat = {
             createdAt: new Date(),
             participants: [userId, correspondenceUser.id],
             messages: []
           }
-          const createdChat = chatModel.createItem(newChat);
+          const createdChat = await chatModel.createItem(newChat);
           setChat(createdChat)
         }
       };
@@ -75,16 +78,14 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 
     const deleteUser = () => {
       alert("delete")
+      alert(userIdForList)
       handleDelete(userIdForList)
       setVisible(!visible)
     };
 
-    
-
-
     return (
         <>
-        {(chat && (userIdForList === userId) && localStorage.getItem("role") === "USER") && (
+        {(localStorage.getItem("role") === "USER") && (
           <div
             onContextMenu={() => setDeleteButton(chat.id)}
             className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
@@ -95,7 +96,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
             key={correspondenceUser.id}
             to={`/profile/${correspondenceUser.id}`}>
               <div className="d-flex align-items-center profile-message text-decoration-none">
-                <img className="profile" src={correspondenceUser.userAvatarURL} alt="ava" />
+                <img className="profile" src={(correspondenceUser.userAvatarURL.length > 0) ? correspondenceUser.userAvatarURL : defaultAvatar} alt="ava" />
                 <p className="main-text justify-content-center mb-1 text-decoration-none">{correspondenceUser.userName}</p>
               </div>
             </NavLink>
@@ -111,14 +112,11 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
                   {(!isSubscribed) && 
                     (<button id="addSubscribeButton" className="btn btn-light button-sbc" onClick={handleSubscribe}>Subscribe</button>)
                   }
-                  <NavLink
-                  key={correspondenceUser.id}
-                  to={`/somechat/${chat.id}`}
-                  state={{ chat, user }}>
-                    <button id="writeButton" className="btn btn-light button-sbc"
+                 
+                  <button id="writeButton" className="btn btn-light button-sbc"
                       onClick={handleWrite}>Write
-                    </button>
-                  </NavLink>
+                  </button>
+
                 </div>
               </div> 
             )}
@@ -152,3 +150,10 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 )}
 
 export default User;
+
+/* /*<NavLink
+                  key={correspondenceUser.id}
+                  to={`/somechat/${chat.id}`}
+                  state={{ chat, user }}>
+                    
+                  </NavLink> */

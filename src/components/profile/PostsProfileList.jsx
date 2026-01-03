@@ -16,26 +16,12 @@ const PostsList = ({user}) => {
   const model = new PostModel()
 
   useEffect(() => {
+    console.log("useEffect1")
       if (user.id == localStorage.getItem('userId')) {
-      setIsUsersPage(true);
-    } 
+        setIsUsersPage(true);
+      } 
       if (fetching) {
-        if (localStorage.getItem('role') === "USER") {
-          model.getAll(`posts/usersPosts/${user.id}?page=${currentPageRef.current}&size=5` )
-          .then(data => {
-            totalPagesRef.current = data.totalPages;
-            setPosts(prev => [...prev, ...data.items]),
-            currentPageRef.current += 1})
-            .finally(() => setFetching(false));
-        }
-        else if (localStorage.getItem('role') === "ADMIN") {
-          model.getAll(`posts?page=${currentPageRef.current}&size=5` )
-          .then(data => {
-            totalPagesRef.current = data.totalPages;
-            setPosts(prev => [...prev, ...data.items]),
-            currentPageRef.current += 1})
-            .finally(() => setFetching(false));
-        }
+        getPosts();
       }
     }, [fetching]);
   
@@ -53,27 +39,52 @@ const PostsList = ({user}) => {
       }
     }
 
+    const getPosts = () => {
+      if (localStorage.getItem('role') === "USER") {
+          model.getAll(`posts/usersPosts/${user.id}?page=${currentPageRef.current}&size=5` )
+          .then(data => {
+            totalPagesRef.current = data.totalPages;
+            setPosts(prev => [...prev, ...data.items]),
+            currentPageRef.current += 1})
+            .finally(() => setFetching(false));
+        }
+        else if (localStorage.getItem('role') === "ADMIN") {
+          model.getAll(`posts?page=${currentPageRef.current}&size=5` )
+          .then(data => {
+            totalPagesRef.current = data.totalPages;
+            setPosts(prev => [...prev, ...data.items]),
+            currentPageRef.current += 1})
+            .finally(() => setFetching(false));
+        }
+    }
 
-  const addPost = async (userId, url, text) => {
+
+    const getUpdatesPosts = () => {
+      setPosts([])
+      currentPageRef.current = 1;
+      getPosts();
+    }
+
+  const addPost = async (userId, url, text, date) => {
     let postDTO = {
       userId: userId,
       postImageURL: url,
-      postTextContent: text
+      postTextContent: text,
+      createdAt: date
     }
     await model.createPost(postDTO);
-    const updatedPosts = await model.getAll("usersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId);
-    setPosts(updatedPosts);
+    getUpdatesPosts();
   };
 
-  const updatePost = async (postId, userId, url, text) => {
+  const updatePost = async (postId, userId, url, text, date) => {
     let postDTO = {
       userId: userId,
       postImageURL: url,
-      postTextContent: text
+      postTextContent: text,
+      createdAt: date
     }
     await model.updatePost(postId, postDTO);
-    const updatedPosts = await model.getAll("usersPosts/" + JSON.parse(localStorage.getItem('userSettings')).userId);
-    setPosts(updatedPosts);
+    getUpdatesPosts();
     setEditingPost(null);
   };
 
