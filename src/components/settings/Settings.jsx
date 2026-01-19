@@ -41,13 +41,16 @@ const Settings = () => {
             const postModel = new PostModel();
 
             const userId = localStorage.getItem('userId');
-            console.log(userId)
+            
+            const followers = await model.getUsers(`users/followers?page=${1}&size=${5}&userId=${userId}`)
+            setUserFollowers(followers.totalItems);
+
+            const subscriptions = await model.getUsers(`users/subscriptions?page=${1}&size=${5}&userId=${userId}`)
+            setUserSubscriptions(subscriptions.totalItems);
 
             const userData = await model.getUser(userId);
             const posts = await postModel.getAll(`posts/usersPosts/${userId}?page=${1}&size=5`);
             setUser(userData);
-            setUserFollowers(await model.getUsers(`users/followers/${userId}`));
-            setUserSubscriptions(await model.getUsers(`users/subscriptions/${userId}`));
             setUsersProfilePosts(posts.totalItems)
           } catch (error) {
             console.error("Ошибка загрузки пользователя:", error);
@@ -83,7 +86,7 @@ const Settings = () => {
                     <div>
                         <div className="d-flex justify-content-between">
                             <div className="setting-text">Status</div>
-                            <div className="setting-inf">{user.userDescription}</div>
+                            <div className="main-text" style={{fontSize: '14px'}}>{user.userDescription}</div>
                         </div>
                     </div>
                 </div>
@@ -91,38 +94,38 @@ const Settings = () => {
                 <div className="container container-background col-12 col-md-9">
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Name</div>
-                        <div className="setting-inf" >{user.firstName}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{user.firstName}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Surname</div>
-                        <div className="setting-inf">{user.lastName}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{user.lastName}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">User name</div>
-                        <div className="setting-inf">{user.userName}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{user.userName}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Page address</div>
-                        <div className="setting-inf">{user.pageAddress}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{user.pageAddress}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Phone</div>
-                        <div className="setting-inf">{user.phone}</div>
+                        <div className="main-text" style={{fontSize: '14px'}}>{user.phone}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Publications</div>
-                        <div className="setting-inf">{usersProfilePosts}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{usersProfilePosts}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Followers</div>
-                        <div className="setting-inf">{userFollowers.length}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{userFollowers}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
                         <div className="setting-text">Subscriptions</div>
-                        <div className="setting-inf">{userSubscriptions.length}</div>
+                        <div className="main-text" style={{fontSize: '14px'}} >{userSubscriptions}</div>
                     </div>
                     <div className="d-flex justify-content-between setting">
-                        <div className="setting-inf" onClick={logout}>Logout</div>
+                        <div className="main-text-hover" style={{fontSize: '14px'}} onClick={logout}>Logout</div>
                     </div>
                     
                 </div>

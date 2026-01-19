@@ -4,20 +4,22 @@ import UserModel from "../../../components/api/modelUser";
 import "../../../styles.css";
 
 const Profile = ({user, postsTotalItems}) => {
-  const [userFollowers, setUserFollowers] = useState([]);
-  const [userSubscriptions, setUserSubscriptions] = useState([]);
+  const [userFollowers, setUserFollowers] = useState(0);
+  const [userSubscriptions, setUserSubscriptions] = useState(0);
   let userModel;
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         userModel = new UserModel();
-        
-        setUserFollowers(await userModel.getUsers(`users/followers/${user.id}`));
-        setUserSubscriptions(await userModel.getUsers(`users/subscriptions/${user.id}`));
+        const followers = await userModel.getUsers(`users/followers?page=${1}&size=${5}&userId=${user.id}`)
+        setUserFollowers(followers.totalItems);
+
+        const subscriptions = await userModel.getUsers(`users/subscriptions?page=${1}&size=${5}&userId=${user.id}`)
+        setUserSubscriptions(subscriptions.totalItems);
       } catch (error) {
         console.error("Ошибка загрузки пользователя:", error);
-      }
+      } 
     };
 
     fetchUser();
@@ -42,15 +44,15 @@ const Profile = ({user, postsTotalItems}) => {
             <p className="text-center main-text">{postsTotalItems}</p>
           </div>
           <NavLink to={`/users/followers/${user.id}`} className="text-decoration-none">
-            <div>
-              <p className="text-center main-text">Followers</p>
-              <p className="text-center main-text">{userFollowers.length}</p>
+            <div className="main-text-hover">
+              <p className="text-center">Followers</p>
+              <p className="text-center">{userFollowers}</p>
             </div>
           </NavLink>
           <NavLink to={`/users/subscriptions/${user.id}`} className="text-decoration-none">
-            <div>
-              <p className="text-center main-text">Subscriptions</p>
-              <p className="text-center main-text">{userSubscriptions.length}</p>
+            <div className="main-text-hover">
+              <p className="text-center">Subscriptions</p>
+              <p className="text-center">{userSubscriptions}</p>
             </div>
           </NavLink>
         </div>

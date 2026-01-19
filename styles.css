@@ -22,6 +22,19 @@
     color: #63008e;
 }
 
+ .main-text-hover {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    color: #fffacd;
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+ }
+
+ .main-text-hover:hover {
+    cursor: pointer;
+    color: #ffa07a;
+ }
+
 .setting-text {
     font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
     font-size: 14px;
@@ -183,18 +196,6 @@
  .setting:last-of-type { 
     border-bottom: none;
 }
-
-
- .setting-inf {
-    font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    color: #fffacd;
-    transition: color 0.3s ease;
- }
-
- .setting-inf:hover {
-    cursor: pointer;
-    color: #ffa07a;
- }
 
  .setting-inf input {
     border: none;
@@ -540,12 +541,6 @@
         height: 40px;
         margin-left: 10px;
     }
-
-    
-
-    /*.profile-inf {
-        margin-right: 0px;
-    }*/
 }
 
 @media  (max-width: 450px) {
@@ -556,6 +551,10 @@
 
 @media only screen and (min-width: 401px) and (max-width: 960px) { 
     .main-text {
+        font-size: 24px;
+    }
+
+    .main-text-hover {
         font-size: 24px;
     }
     

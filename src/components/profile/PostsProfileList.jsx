@@ -49,7 +49,7 @@ const PostsList = ({user}) => {
             .finally(() => setFetching(false));
         }
         else if (localStorage.getItem('role') === "ADMIN") {
-          model.getAll(`posts?page=${currentPageRef.current}&size=5` )
+          model.getAll(`posts/allPosts?page=${currentPageRef.current}&size=5` )
           .then(data => {
             totalPagesRef.current = data.totalPages;
             setPosts(prev => [...prev, ...data.items]),

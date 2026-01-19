@@ -43,10 +43,10 @@ const UsersPage = () => {
 
             if (localStorage.getItem('role') === "USER") {
                 if (usersListType === "followers") {
-                    setUsers(await userModel.getUsers(`users/followers/${userId}`));
+                    setUsers(await userModel.getUsers(`users/followers?page=${page}&size=${size}&userId=${userId}`));
                 }
                 else if (usersListType === "subscriptions") {
-                    setUsers(await userModel.getUsers(`users/subscriptions/${userId}`));
+                    setUsers(await userModel.getUsers(`users/subscriptions?page=${page}&size=${size}&userId=${userId}`));
                 }
                 else if (usersListType === "users") {
                 
@@ -117,15 +117,14 @@ const UsersPage = () => {
                         type="button"
                         className="btn d-flex align-items-center"
                         onClick={() => setIsAlphabeticalSort(prev => !prev)}
-                        title={isAlphabeticalSort ? "Отключить сортировку по алфавиту" : "Сортировать по алфавиту"}
                     >
                         <i className="bi bi-sort-alpha-down h2" style={{ color: '#fffacd' }}></i>
                     </button>
                 )}
             </div>)}
 
-            {users.length > 0 ? (
-                localStorage.getItem("role") === 'USER' && (
+            {((users.length > 0) && (localStorage.getItem("role") != 'ADMIN')) ? (
+                (localStorage.getItem("role") === 'USER') && (
                     users.map((correspondenceUser) => (
                     <User
                         key={correspondenceUser.id}
@@ -135,10 +134,10 @@ const UsersPage = () => {
                     ))
                 )
                 ) : (
-                <div>There are no users...</div>
+                <div className="text-center">There are no users...</div>
             )}
 
-            {users.length > 0 ? (
+            {((users.length > 0) && (localStorage.getItem("role") === 'USER')) ? (
                 localStorage.getItem("role") === 'ADMIN' && (
                     users.map((correspondenceUser) => (
                         <User

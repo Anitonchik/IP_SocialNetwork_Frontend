@@ -5,6 +5,7 @@ import "../../../styles.css";
 import { data } from "react-router-dom";
 
 const PostList = () => {
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
   const userId = localStorage.getItem('userId');
   const [posts, setPosts] = useState([]);
   const currentPageRef = useRef(1);
@@ -15,13 +16,27 @@ const PostList = () => {
   const model = new PostModel();
 
   useEffect(() => {
+      setIsAuth(!!localStorage.getItem("token"));
+  });
+
+  useEffect(() => {
     if (fetching) {
-      model.getAll(`posts/notUsersPosts/${userId}?page=${currentPageRef.current}&size=5` )
-      .then(data => {
-        totalPagesRef.current = data.totalPages;
-        setPosts(prev => [...prev, ...data.items]),
-        currentPageRef.current += 1})
-        .finally(() => setFetching(false));
+      if (isAuth) {
+        model.getAll(`posts/notUsersPosts/${userId}?page=${currentPageRef.current}&size=5`)
+        .then(data => {
+          totalPagesRef.current = data.totalPages;
+          setPosts(prev => [...prev, ...data.items]),
+          currentPageRef.current += 1})
+          .finally(() => setFetching(false));
+      }
+      else {
+        model.getAll(`posts/allPosts?page=${currentPageRef.current}&size=5` )
+        .then(data => {
+          totalPagesRef.current = data.totalPages;
+          setPosts(prev => [...prev, ...data.items]),
+          currentPageRef.current += 1})
+          .finally(() => setFetching(false));
+      }
     }
   }, [fetching]);
 

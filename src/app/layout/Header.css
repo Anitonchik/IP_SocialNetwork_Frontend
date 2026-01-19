@@ -2,14 +2,6 @@
     display: none;
   }
   
-  .hamburger {
-    width: 10rem;
-    display: none;
-    cursor: pointer;
-    color: #fffacd;
-    z-index: 2;
-  }
-  
   .nav-list {
     display: flex;
     list-style: none;
@@ -26,47 +18,61 @@
   }
   
   .hamburger {
-      display: flex;
-      align-self: flex-end;
-    }
+    display: flex;
+    margin-left: 20px; 
+    width: 2rem;
+    cursor: pointer;
+    color: #fffacd;
+    z-index: 2; 
+    align-items: flex-start;   
+  }
+
+  .nav-list-hamburger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+    background-color: rgba(247, 247, 247, 0.878);
+    border-radius: 10px;
+    position: absolute;
+    top: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0px;
+    right: 0; 
+  }
+
+  .nav-list-link-hamburger {
+    color: #a6674e;
+    width: 90%;
+    margin: 0;
+    text-align: center;
+    border-bottom: 2px solid rgba(197, 197, 192, 0.981);
+  }
+
+  .nav-list-link-hamburger:last-child {
+    border-bottom: none;
+  }
+
+  .nav-list-hamburger.open {
+    max-height: 300px;
+    opacity: 1; 
+  }
+  .main-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+  }
  
   @media screen and (max-width: 768px) {
-    .main-nav {
-      flex-direction: column;
-      align-items: flex-start;
-      position: relative;
-    }
+    
   
     
   
-    .nav-list {
-      flex-direction: column;
-      width: 100%;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-      opacity: 0;
-      background-color: rgba(247, 247, 247, 0.766);
-      position: absolute;
-      top: 100%;
-      left: 0;
-    }
-  
-    .nav-list-link {
-        color: #a6674e;
-      margin: 0;
-      text-align: center;
-      border-bottom: 1px solid rgba(234, 234, 203, 0.981);
-    }
-  
-    .nav-list-link:last-child {
-      border-bottom: none;
-    }
-  
-    .nav-list.open {
-      max-height: 300px;
-      opacity: 1;
-    }
+   
   }
 
   @media screen and (max-width: 180px) {

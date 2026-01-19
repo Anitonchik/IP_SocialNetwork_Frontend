@@ -113,7 +113,6 @@ const ChatList = () => {
   }
 
   const handleUsersClick = () => {
-    console.log(`/users/users/${user.id}`)
     navigate(`/users/users/${user.id}`);
 };
 
@@ -143,7 +142,7 @@ const ChatList = () => {
           type="button"
           className="btn d-flex align-items-center"
           onClick={() => setIsAlphabeticalSort((prev) => !prev)}
-          title={isAlphabeticalSort ? "Отключить сортировку по алфавиту" : "Сортировать по алфавиту"}
+          
         >
           <i className="bi bi-sort-alpha-down h2" style={{color: '#fffacd'}}></i>
         </button>
@@ -179,7 +178,7 @@ const ChatList = () => {
             </div> 
             
           </NavLink>
-       ))) : ( <div className="text-center mt-4">Чаты не найдены</div>)}
+       ))) : ( <div className="text-center mt-4">No chats found</div>)}
 
       <div 
         className="bi bi-plus-circle-fill h1 position-absolute bottom-0 end-0 m-3" 
