@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import UserModel from "../../../components/api/modelUser";
 import PostModel from "../../../components/api/modelPost";
 import "../../../styles.css"
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 const Settings = () => {
     const [user, setUser] = useState({});
@@ -57,6 +58,7 @@ const Settings = () => {
           }
         };
         fetchUser();
+        
     }, []);
 
     const handleChange = (field, value) => {
@@ -79,14 +81,14 @@ const Settings = () => {
         
             <div className="d-flex flex-md-row-reverse flex-column container gap-md-3" style={{maxWidth: '1000px', height: '100hv'}}>
 
-                <div className="text-center container container-background setting-profile col-md-3">
+                <div className="text-center container container-background setting-profile col-md-3 gap-3">
                     <div className="input-file-row">
-                        <img className="profile" style={{width: '80px', height: '80px'}} src={user.userAvatarURL} alt="avatar"/>
+                        <img className="profile" style={{width: '80px', height: '80px'}} src={(user.userAvatarURL?.length > 0) ? user.userAvatarURL : defaultAvatar} alt="avatar"/>
                     </div>
                     <div>
-                        <div className="d-flex justify-content-between">
-                            <div className="setting-text">Status</div>
-                            <div className="main-text" style={{fontSize: '14px'}}>{user.userDescription}</div>
+                        <div className="d-flex status-container">
+                            <div className="setting-text status-label">Status</div>
+                            <div className="main-text status-text" style={{fontSize: '14px'}}>{user.userDescription}</div>
                         </div>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ const ChatWindow = () => {
   const [messages, setMessages] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(null);
+  const messageRefs = useRef({});
 
   let date = null;
   let showDate = true;
@@ -30,18 +31,29 @@ const ChatWindow = () => {
     })
 
   useEffect(() => {
-    if (!chat) return;
-    if (!user) return; 
-
     setHeaderData(chat);
-    fetchMessages();
+    if (!chat) return;
+    if (!user) return;
+    fetchMessages()
+    const timer = setInterval(fetchMessages, 5000)
+    return () => {clearInterval(timer)}
   }, [user, chat]);
+
+  /*useEffect(() => {
+    const lastMessageId = messages[messages.length - 1]?.id;
+    if (lastMessageId && messageRefs.current[lastMessageId]) {
+      messageRefs.current[lastMessageId].scrollIntoView({
+        behavior: 'smooth',
+        block: 'end'
+      });
+    }
+  }, [messages]);*/
 
 
   const fetchMessages = async () => {
     try {
       const chatMessages = await messageModel.getMessagesFromChat(path, chat.id);
-
+      
       setMessages(chatMessages.map(element => {
         const createdAt = new Date(element.createdAt);
 
@@ -69,7 +81,6 @@ const ChatWindow = () => {
         }
 
       }))
-      console.log(messages)
     } catch (error) {
       console.error("Ошибка при загрузке чатов:", error);
     }
@@ -81,10 +92,7 @@ const ChatWindow = () => {
       chatId: chat.id,
       userId: user.id,
       messageText: text,
-      createdAt: createdAt,
-      attachments: [],
-      readBy: [],
-
+      createdAt: createdAt
     };
     try {
       await messageModel.createMessage(newMessage);
@@ -98,7 +106,7 @@ const ChatWindow = () => {
   const onSendEditMessage = async (text) => {
     if (editMessage) {
       const newMessage = {
-        chatId: editMessage.chat.id,
+        chatId: chat.id,
         userId: editMessage.user.id,
         messageText: text,
         createdAt: editMessage.createdAt
@@ -133,19 +141,21 @@ const ChatWindow = () => {
     }
 
     return (
-      <>
+      <div key={msg.id}>
         {(showDate) && (
           <div className="d-block text-center">
             <div className="date-message-text">{msg.day + " " + msg.month}</div>
           </div>)}
-        <Message
-          key={msg.id}
-          message={msg}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-        />
-      </>)
+        
+          <Message
+            key={msg.id}
+            message={msg}
+            handleDelete={handleDelete}
+            handleUpdate={handleUpdate}
+          />
+      </div>)
   }), [messages]);
+  //<div ref={(el) => { messageRefs.current[msg.id] = el; }}></div>
 
 
   return (

@@ -37,8 +37,12 @@ const AuthPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();    
     await authModel.login(loginData.userName, loginData.password)
-    
-    setTimeout(() => { navigate("/main"); }, 0);
+    if (localStorage.getItem("role") === 'USER'){
+      setTimeout(() => { navigate("/main"); }, 0);
+    }
+    else {
+      setTimeout(() => { navigate(`/profile/${localStorage.getItem("userId")}`); }, 0);
+    }
   };
 
   const handleRegisterSubmit = async (e) => {

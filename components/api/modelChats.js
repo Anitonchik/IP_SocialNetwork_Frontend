@@ -1,18 +1,18 @@
 import { deleteItem, getAllItems, getItem, createItem, updateItem, request } from "./client";
 
-const PATH = "chats/";
+const PATH = "chats";
 
 export default class ChatsModel { 
 
     async getAll(newPath, userId) {
         let elements;
         //alert(PATH + "/" + newPath + "/" + userId)
-        elements = await getAllItems(PATH + newPath + "/" + userId);
+        elements = await getAllItems(PATH + "/" + newPath + "/" + userId);
         return elements;
     } 
 
     async getChat(id) {
-        const chat = await getItem(PATH + "userschats/" + id);
+        const chat = await getItem(PATH + "/userschats/" + id);
         return chat;
     }
 
@@ -23,12 +23,12 @@ export default class ChatsModel {
 
     async getChatOfTwoUsers(userId, otherUserId){
         //alert(PATH + "gd")
-        const chat = await getItem(PATH + "userschat/" + userId + "/" + otherUserId)
+        const chat = await getItem(PATH + "/userschat/" + userId + "/" + otherUserId)
         return chat;
     }
 
-    async createChat(chatDTO) {
-        const chat = await createItem(PATH, chatDTO)
+    async createChat(chatDTO, userId) {
+        const chat = await createItem(`${PATH}/${userId}`, chatDTO)
         return chat;
     }
 
@@ -37,7 +37,7 @@ export default class ChatsModel {
         return chat;
     }
 
-     async delete(id) {
-        await deleteItem(PATH, id);
+     async delete(id, userId) {
+        await deleteItem(PATH + "/" + id + "/" + userId);
     }
 }

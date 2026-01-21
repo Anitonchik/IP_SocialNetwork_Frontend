@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import UserModel from "../../../components/api/modelUser";
 import "../../../styles.css";
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 const Profile = ({user, postsTotalItems}) => {
   const [userFollowers, setUserFollowers] = useState(0);
@@ -34,7 +35,7 @@ const Profile = ({user, postsTotalItems}) => {
     >
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div className="d-flex justify-content-around align-items-center gap-3">
-          <img className="profile-info-img" src={user.userAvatarURL} alt="avatar" />
+          <img className="profile-info-img" src={(user.userAvatarURL.length > 0) ? user.userAvatarURL : defaultAvatar} alt="avatar" />
           <div className="main-text">{user.userName}</div>
         </div>
         { (localStorage.getItem("role") === 'USER') && (

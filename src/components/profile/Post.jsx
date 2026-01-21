@@ -7,7 +7,6 @@ import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 const Post = ({ post, onDelete, onEdit, showButtons }) => {
   const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const [postsDesc, setPostsDesc] = useState("");
-  const [isEdited, setIsEdited] = useState(false);
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
   }
 
   return (
-  <div>
+  <div key={post.id}>
     <div className="container container-background mx-auto" >
 
         <div className="d-flex justify-content-between align-items-center container container-background" style={{gap: '10px'}}>

@@ -24,7 +24,6 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log(userId)
         const model = new UserModel();
         const postModel = new PostModel();
         const usersProfileData = await model.getUser(userId);

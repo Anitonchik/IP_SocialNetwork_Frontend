@@ -17,6 +17,7 @@ const ChatList = () => {
   const [visibleDeleteChatId, setVisibleDeleteChatId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAlphabeticalSort, setIsAlphabeticalSort] = useState(false);
+  const [isChatNew, setIsChatNew] = useState(false);
   
   const chatsModel = new ChatsModel();
   let userModel = null;
@@ -59,36 +60,28 @@ const ChatList = () => {
         for (const element of response) {
           const createdAt = new Date(element.createdAt);
           
-          let messages = await messageModel.getMessagesFromChat("fromChat", element.id);
-          const messagesArray = Object.values(messages);
-          messagesArray.sort((a, b) => new Date(a.date) - new Date(b.date));
-          
           let processedElement;
-          if (messagesArray.length > 0) {
-            const lastMessage = messagesArray[messagesArray.length - 1];
+          if (element.messages.length > 0) {
+            const lastMessage = element.messages[element.messages.length - 1];
             const lastMessageDate = new Date(lastMessage.createdAt);
             processedElement = {
               ...element,
+              isChatNew: false,
               createdAt,
               day: createdAt.getDate(),
               month: monthsShort[createdAt.getMonth()],
               time: createdAt.toTimeString().slice(0, 5),
-              lastMessage: lastMessage,
+              lastMessage: lastMessage.messageText,
               dayLastMessage: lastMessageDate.getDate(),
               monthLastMessage: monthsShort[lastMessageDate.getMonth()],
               timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
             };
           } else {
+            setIsChatNew(true)
             processedElement = {
               ...element,
-              createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              lastMessage: "chat created at",
-              dayLastMessage: createdAt.getDate(),
-              monthLastMessage: monthsShort[createdAt.getMonth()],
-              timeLastMessage: createdAt.toTimeString().slice(0, 5),
+              isChatNew: true,
+              lastMessage: "write message..."
             };
           }
           
@@ -114,7 +107,7 @@ const ChatList = () => {
 
   const handleUsersClick = () => {
     navigate(`/users/users/${user.id}`);
-};
+  };
 
 
   const setDeleteButton = (chatId) => {
@@ -124,7 +117,7 @@ const ChatList = () => {
 
 
   const deleteChat = async (chatId) => {
-    await chatsModel.delete(chatId);
+    await chatsModel.delete(chatId, userId);
     fetchChats();
   }
 
@@ -150,34 +143,56 @@ const ChatList = () => {
 
       {displayedChats.length > 0 ? (
         displayedChats.map((chat) => (
-          <NavLink
-            key={chat.id}
-            to={`/somechat/${chat.id}`}
-            state={{ chat, user }}
-            onContextMenu={() => setDeleteButton(chat.id)}
-            className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
-            style={{ maxWidth: 1000, padding: "10px 5px" }}
-          >
-            <div className="d-flex align-items-center profile-message">
-              <img className="profile" src={chat.correspondenceUser.userAvatarURL} alt="ava" />
-              <div className="main-text d-flex flex-column justify-content-center">
-                <p className="mb-1">{chat.correspondenceUser.userName}</p>
-                <p className="mb-1">{chat.lastMessage.messageText}</p>
-              </div>
-            </div>
-            <div className="d-flex flex-row align-items-center gap-3 text-end pe-4 disc-time-text">
-              <div className="flex-column">
-                <p className="mb-1">{chat.dayLastMessage + " " + chat.monthLastMessage}</p>
-                <p className="mb-1">{chat.timeLastMessage}</p>
-              </div>
-              {(visible && visibleDeleteChatId === chat.id) && (
-              <div className="sub-text gap-5">
-                <div className="bi bi-trash-fill h2" onClick={() => deleteChat(chat.id)}></div>
-              </div>
+          <div key={chat.id} className="d-flex flex-row">
+            <NavLink
+              key={chat.id}
+              to={`/somechat/${chat.id}`}
+              state={{ chat, user }}
+              onContextMenu={() => setDeleteButton(chat.id)}
+              className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
+              style={{ maxWidth: 1000, padding: "10px 5px" }}
+              >
+              <>
+                
+              {(!chat.isChatNew) && (
+                <>
+                  <div className="d-flex align-items-center profile-message">
+                    <img className="profile" src={chat.correspondenceUser.userAvatarURL} alt="ava" />
+                    <div className="main-text d-flex flex-column justify-content-center">
+                      <p className="mb-1">{chat.correspondenceUser.userName}</p>
+                      <p className="mb-1">{chat.lastMessage}</p>
+                    </div>
+                  </div>
+                  <div className="d-flex flex-row align-items-center gap-3 text-end pe-4 disc-time-text">
+                    <div className="flex-column">
+                      <p className="mb-1">{chat.dayLastMessage + " " + chat.monthLastMessage}</p>
+                      <p className="mb-1">{chat.timeLastMessage}</p>
+                    </div>
+                  </div>
+                </>
               )}
-            </div> 
-            
-          </NavLink>
+
+              {(chat.isChatNew) && (
+                <>
+                  <div className="d-flex align-items-center profile-message">
+                    <img className="profile" src={chat.correspondenceUser.userAvatarURL} alt="ava" />
+                    <div className="main-text d-flex flex-column justify-content-center">
+                      <p className="mb-1">{chat.correspondenceUser.userName}</p>
+                      <p className="disc-time-text mb-1">{chat.lastMessage}</p>
+                    </div>
+                  </div>
+                </>
+              )}
+              </>
+                
+
+              </NavLink>
+              {(visible && visibleDeleteChatId === chat.id) && (
+                  <div className="d-flex align-items-center main-text gap-5">
+                    <div className="bi bi-trash-fill h2" onClick={() => deleteChat(chat.id)}></div>
+                  </div>
+              )}
+            </div>
        ))) : ( <div className="text-center mt-4">No chats found</div>)}
 
       <div 

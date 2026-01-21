@@ -6,6 +6,7 @@ import User from "./User.jsx";
 const UsersPage = () => {
     const userModel = new UserModel();
     const [users, setUsers] = useState([]);
+    const [userForList, setUserForList] = useState(null);
     const currentPageRef = useRef(1);
     const [fetching, setFetching] = useState(true);
     const totalPagesRef = useRef(0);
@@ -15,6 +16,12 @@ const UsersPage = () => {
     const { usersListType, userIdForList } = useParams();
 
     useEffect(() => {
+        if (localStorage.getItem('role') === "USER") {
+            const fetchUserForList = async () => {
+                setUserForList(await userModel.getUser(userIdForList));
+            }
+            fetchUserForList();
+        }   
         setUsers([]);
         currentPageRef.current = 1;
         setFetching(true);
@@ -43,10 +50,12 @@ const UsersPage = () => {
 
             if (localStorage.getItem('role') === "USER") {
                 if (usersListType === "followers") {
-                    setUsers(await userModel.getUsers(`users/followers?page=${page}&size=${size}&userId=${userId}`));
+                   data = await userModel.getUsers(`users/followers?page=${page}&size=${size}&userId=${userId}`);
+                    
                 }
                 else if (usersListType === "subscriptions") {
-                    setUsers(await userModel.getUsers(`users/subscriptions?page=${page}&size=${size}&userId=${userId}`));
+                    data = await userModel.getUsers(`users/subscriptions?page=${page}&size=${size}&userId=${userId}`);
+                    
                 }
                 else if (usersListType === "users") {
                 
@@ -67,9 +76,9 @@ const UsersPage = () => {
                 }
             }
             else if (localStorage.getItem('role') === "ADMIN") {
-                //alert("а где")
-                data = await userModel.getUsers(`users?page=${page}&size=${size}`);
-                
+
+                data = await userModel.getUsers(`users?page=${page}&size=${size}&userId=${localStorage.getItem("userId")}`);
+                console.log(data)
             }
 
             totalPagesRef.current = data?.totalPages || 0;
@@ -91,9 +100,10 @@ const UsersPage = () => {
 
     //для админа
 
-    const handleDelete = async (id) => {
-        if (id != localStorage.getItem("userId")) {
-            await userModel.delete(id);
+    const handleDelete = async (user) => {
+        console.log(user);
+        if (user.id != localStorage.getItem("userId")) {
+            await userModel.delete(user.id);
             setUsers([])
             currentPageRef.current = 1;
             await fetchUsers();
@@ -123,33 +133,30 @@ const UsersPage = () => {
                 )}
             </div>)}
 
-            {((users.length > 0) && (localStorage.getItem("role") != 'ADMIN')) ? (
-                (localStorage.getItem("role") === 'USER') && (
+
+            {(users.length > 0) ? (
+                <>
+                {(localStorage.getItem("role") === 'USER') && (
                     users.map((correspondenceUser) => (
                     <User
                         key={correspondenceUser.id}
-                        userIdForList={userIdForList}
+                        userForList={userForList}
                         correspondenceUser={correspondenceUser}
                     />
                     ))
-                )
-                ) : (
-                <div className="text-center">There are no users...</div>
-            )}
-
-            {((users.length > 0) && (localStorage.getItem("role") === 'USER')) ? (
-                localStorage.getItem("role") === 'ADMIN' && (
+                )}
+                {(localStorage.getItem("role") === 'ADMIN') && (
                     users.map((correspondenceUser) => (
                         <User
-                        key={correspondenceUser.id} 
-                        userIdForList={correspondenceUser.id}
+                        userForList={localStorage.getItem("userId")}
                         correspondenceUser={correspondenceUser}
                         handleDelete={handleDelete}                   
                         />
                     ))
-            )) : (
-                <div>There are no users...</div>
-            )}
+                )}
+                </>
+
+            ) : (<div className="text-center">There are no users...</div>)}
         </>
     );
 };

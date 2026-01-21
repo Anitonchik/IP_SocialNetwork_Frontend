@@ -55,7 +55,7 @@ export const request = async (path) => {
             headers: { 
                 "Authorization": token ? `Bearer ${token}` : undefined 
             } 
-        }; 
+        };
         
         const response = await fetch(`${URL}${path}`, options)
         if (response.status === 401) {

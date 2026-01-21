@@ -1,17 +1,17 @@
 import UserModel from "../../../components/api/modelUser.js";
 import ChatsModel from "../../../components/api/modelChats.js";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../../../styles.css";
 import {useEffect, useState} from "react";
 import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
-const User = ({userIdForList, correspondenceUser, handleDelete}) => {
+const User = ({userForList, correspondenceUser, handleDelete}) => {
   const [visible, setVisible] = new useState(false);
 
-  const [user, setUser] = useState(null);
-  const [chat, setChat] = useState(null)
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isWriteButtonVisible, setIsWriteButtonVisible] = useState(true);
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   let userModel = new UserModel();
   let chatModel = new ChatsModel();
@@ -19,11 +19,11 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
   useEffect(() => {    
     const fetchUser = async() => {
       userModel = new UserModel();
-      setUser(await userModel.getUser(userIdForList));
-
-      if (userIdForList === userId && localStorage.getItem("role") === 'USER') {
-        //setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id))
-        setIsSubscribed(await userModel.isSubscribed(userId, correspondenceUser.id));
+      if (userForList && userForList.id == userId && localStorage.getItem("role") === 'USER') {
+        setIsSubscribed(correspondenceUser.isSubscribed);
+      }
+      if (correspondenceUser.userRole === "ADMIN") {
+        setIsWriteButtonVisible(false);
       }
     }
     fetchUser();
@@ -31,7 +31,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 
     const handleUnSubscribe = async () => {
       try {
-        await userModel.deleteSubscription(userId, correspondenceUser.id);
+        await userModel.deleteSubscription(correspondenceUser.id, userId);
         setIsSubscribed(false);
       } catch (error) {
         console.error("Ошибка при отписке:", error);
@@ -40,7 +40,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 
     const handleSubscribe = async() => {
       try {
-        await userModel.createSubscription(userId, correspondenceUser.id);
+        await userModel.createSubscription(correspondenceUser.id, userId);
         setIsSubscribed(true);
       } catch (error) {
         console.error("Ошибка при подписке:", error);
@@ -49,21 +49,24 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 
     const handleWrite = () => {
       const fetchUser = async() => {
-        const isChatExist = await chatModel.request(`userschats/checkavailability/${userId}/${correspondenceUser.id}`)
+        const isChatExist = await chatModel.request(`chats/userschats/checkavailability/${userId}/${correspondenceUser.id}`)
+        let chat;
         if (isChatExist) {
-          setChat(await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id));
+          chat = await chatModel.getChatOfTwoUsers(userId, correspondenceUser.id);
         }
         else {
-          alert("false")
-          // испрв
           const newChat = {
             createdAt: new Date(),
-            participants: [userId, correspondenceUser.id],
-            messages: []
+            firstUserId: userId,
+            secondUserId: correspondenceUser.id
           }
-          const createdChat = await chatModel.createItem(newChat);
-          setChat(createdChat)
+          chat = await chatModel.createChat(newChat, userId);
         }
+        navigate(`/somechat/${chat.id}`,
+        {
+          state: {chat: chat, user: userForList}
+        })
+        
       };
       fetchUser();
     }
@@ -71,15 +74,14 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
     // это для админа 
 
     const setMenu = (event) => {
-      if (userIdForList != localStorage.getItem("userId")) {
+      if (userForList.id != localStorage.getItem("userId")) {
         setVisible(!visible)        
       }
     }
 
     const deleteUser = () => {
-      alert("delete")
-      alert(userIdForList)
-      handleDelete(userIdForList)
+      console.log(correspondenceUser)
+      handleDelete(correspondenceUser)
       setVisible(!visible)
     };
 
@@ -90,6 +92,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
             onContextMenu={() => setDeleteButton(chat.id)}
             className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
             style={{ maxWidth: 1000, padding: "10px 5px" }}
+            key={correspondenceUser.id}
           >
             <NavLink
             className="text-decoration-none"
@@ -101,7 +104,7 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
               </div>
             </NavLink>
 
-            {(userIdForList === userId && localStorage.getItem("role") === 'USER') && (
+            {(userForList.id == userId && localStorage.getItem("role") === 'USER') && (
             
               <div className="d-flex flex-row align-items-center gap-3 text-end pe-1 disc-time-text">
                 
@@ -112,10 +115,12 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
                   {(!isSubscribed) && 
                     (<button id="addSubscribeButton" className="btn btn-light button-sbc" onClick={handleSubscribe}>Subscribe</button>)
                   }
-                 
+
+                  {(isWriteButtonVisible) && (
                   <button id="writeButton" className="btn btn-light button-sbc"
                       onClick={handleWrite}>Write
-                  </button>
+                  </button>)}
+                  
 
                 </div>
               </div> 
@@ -150,10 +155,3 @@ const User = ({userIdForList, correspondenceUser, handleDelete}) => {
 )}
 
 export default User;
-
-/* /*<NavLink
-                  key={correspondenceUser.id}
-                  to={`/somechat/${chat.id}`}
-                  state={{ chat, user }}>
-                    
-                  </NavLink> */

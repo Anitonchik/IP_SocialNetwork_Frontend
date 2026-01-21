@@ -16,7 +16,6 @@ export default class AuthModel {
             localStorage.setItem("token", jwtToken.jwt);
             localStorage.setItem("userId", jwtToken.id);
             localStorage.setItem("role", jwtToken.role);
-            console.log(localStorage.getItem('role'));
         }
         catch (ex) {
             alert("Ошибка выхода в систему")

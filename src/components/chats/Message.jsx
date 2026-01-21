@@ -4,8 +4,6 @@ import "../../../styles.css"
 const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   const [visible, setVisible] = new useState(false);
   const userId = localStorage.getItem('userId')
-  console.log(userId)
-  console.log(message.user.id)
 
   const setMenu = (event) => {
     if (userId == message.user.id) {
@@ -14,7 +12,6 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   }
 
   const deleteMsg = () => {
-    alert("delete")
     handleDelete(message.id)
     setVisible(!visible)
   };
@@ -29,21 +26,13 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   }
 
   return (
-    <>
-    {(message.isEdited) && 
-    (
-      <div className={`d-block ${message.sender}-message`} onContextMenu={setMenu}>
+    <div key={message.id}>
+      <div id={message.id} className={`d-block ${message.sender}-message`} onContextMenu={setMenu}>
         <div className="message-chat-text">{message.messageText}</div>
-        <div className="message-chat-time">{"edited " + message.time}</div>
+        {(message.isEdited) && (<div className="message-chat-time">{"edited " + message.time}</div>)}
+        {(!message.isEdited) && (<div className="message-chat-time">{message.time}</div>)}
       </div>
-    )}
-    {(!message.isEdited) && 
-    (
-      <div className={`d-block ${message.sender}-message`} onContextMenu={setMenu}>
-        <div className="message-chat-text">{message.messageText}</div>
-        <div className="message-chat-time">{message.time}</div>
-      </div>
-    )}
+    
       
       {(visible) && (
         <div className="message-menu gap-5">
@@ -51,7 +40,7 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
           <div onClick={() => deleteMsg()}>Delete</div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Post from "./Post.jsx";
 import PostEditor from "./PostEditor.jsx";
 import PostModel from "../../../components/api/modelPost.js";
@@ -16,7 +16,6 @@ const PostsList = ({user}) => {
   const model = new PostModel()
 
   useEffect(() => {
-    console.log("useEffect1")
       if (user.id == localStorage.getItem('userId')) {
         setIsUsersPage(true);
       } 

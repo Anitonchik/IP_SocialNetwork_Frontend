@@ -12,7 +12,6 @@ const PostList = () => {
   const [fetching, setFetching] = useState(true); // true - подгружаем данные
   const totalPagesRef = useRef(0);
 
-  const [editingPost, setEditingPost] = useState(null);
   const model = new PostModel();
 
   useEffect(() => {

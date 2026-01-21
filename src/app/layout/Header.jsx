@@ -15,8 +15,8 @@ export const Header = ({ headerData }) => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const isChatPage = location.pathname.startsWith('/somechat/');
-    const chatId = isChatPage ? location.pathname.split('/')[2] : null;
 
+    //console.log(headerData)
 
     useEffect(() => {
         const handleStorage = () => {
@@ -64,7 +64,7 @@ export const Header = ({ headerData }) => {
             return (
                 <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
                     <nav className="d-flex ms-2 gap-md-5 gap-2 flex-row align-items-center">
-                        <NavLink className="main-text align-items-center" to="/">
+                        <NavLink className="main-text-hover align-items-center" to="/">
                             Main
                         </NavLink>
 
@@ -84,14 +84,14 @@ export const Header = ({ headerData }) => {
 
                             <div className="main-nav flex-end">
                                 <ul className={`nav-list`}>
-                                    <NavLink className="main-text-hover nav-list-link" to="/settings">
-                                        Settings
-                                    </NavLink>
                                     <NavLink className="main-text-hover nav-list-link" to="/chats">
                                         Chats
                                     </NavLink>
                                     <NavLink className="main-text-hover nav-list-link" to={`/users/users/${userId}`}>
                                         Users
+                                    </NavLink>
+                                    <NavLink className="main-text-hover nav-list-link" to={`/profile/${userId}`}>
+                                        Profile
                                     </NavLink>
                                 </ul>
                             </div>
@@ -103,10 +103,10 @@ export const Header = ({ headerData }) => {
                                     onClick={toggleMenu}
                                 />
                                 <ul className={`nav-list-hamburger ${isOpen ? 'open' : ''}`}>
-                                    <NavLink className="main-text-hover nav-list-link-hamburger" to={`/profile/${userId}`}>
-                                        Profile
-                                    </NavLink>
                                     
+                                    <NavLink className="main-text-hover nav-list-link-hamburger" to="/settings">
+                                        Settings
+                                    </NavLink>
                                     <NavLink className="main-text-hover nav-list-link-hamburger" onClick={logout} to="/">
                                         Logout
                                     </NavLink>
@@ -148,26 +148,24 @@ export const Header = ({ headerData }) => {
         else {
             return (
             <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
-                    <nav className="d-flex gap-1 gap-md-5 gap-2 flex-row align-items-center">
+                    <nav className="d-flex gap-1 gap-md-5 gap-2 align-items-center">
                         <NavLink className="main-text-hover align-items-center" to={`/profile/${userId}`}>
                             Posts
                         </NavLink>
 
                     </nav>
                     
-                    <nav className="main-nav flex-end main-text-hover">
+                    <nav className="main-nav flex-row nav-list">
                         
-                        <ul className={`nav-list`}>
-                            <NavLink className="nav-list-link" to="/settings">
-                                Settings
-                            </NavLink>
-                            <NavLink className="nav-list-link" to={`/users`}>
-                                Users
-                            </NavLink>
-                            <NavLink className="nav-list-link" onClick={logout} to="/">
-                                    Logout
-                            </NavLink>
-                        </ul>
+                        <NavLink className="main-text-hover nav-list-link" to="/settings">
+                            Settings
+                        </NavLink>
+                        <NavLink className="main-text-hover nav-list-link" to={`/users`}>
+                            Users
+                        </NavLink>
+                        <NavLink className="main-text-hover nav-list-link" onClick={logout} to="/">
+                            Logout
+                        </NavLink>
                     </nav>
                 </header>
             )
@@ -177,14 +175,14 @@ export const Header = ({ headerData }) => {
         return (
             <header className="container-background container d-flex justify-content-between align-items-center p-2 gap-5 mt-0 mb-0" style={{ maxWidth: 1000 }} >
                 <nav className="d-flex gap-1 gap-md-5 gap-2 flex-row align-items-center">
-                    <NavLink className="main-text align-items-center" to="/">
+                    <NavLink className="main-text-hover align-items-center" to="/">
                         Main
                     </NavLink>
                 </nav>
                 
                 <nav className="main-nav flex-end">
                     <ul className={`nav-list`}>
-                        <NavLink className="main-text nav-list-link" to="/login">
+                        <NavLink className="main-text-hover nav-list-link" to="/login">
                             Login
                         </NavLink>
                     </ul>
