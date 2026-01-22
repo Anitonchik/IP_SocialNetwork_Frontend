@@ -70,7 +70,7 @@ const User = ({userForList, correspondenceUser, handleDelete}) => {
       };
       fetchUser();
     }
-
+    
     // это для админа 
 
     const setMenu = (event) => {
@@ -139,7 +139,7 @@ const User = ({userForList, correspondenceUser, handleDelete}) => {
               key={correspondenceUser.id}
               to={`/profile/${correspondenceUser.id}`}>
                 <div className="d-flex align-items-center profile-message text-decoration-none">
-                  <img className="profile" src={correspondenceUser.userAvatarURL} alt="ava" />
+                  <img className="profile" src={(correspondenceUser.userAvatarURL.length > 0) ? correspondenceUser.userAvatarURL : defaultAvatar} alt="ava" />
                   <p className="main-text justify-content-center mb-1 text-decoration-none">{correspondenceUser.userName}</p>
                 </div>
               </NavLink>

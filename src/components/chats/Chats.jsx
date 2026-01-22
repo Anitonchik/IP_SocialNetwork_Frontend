@@ -1,27 +1,21 @@
 import React from "react";
 import { NavLink, useNavigate  } from "react-router-dom";
 import ChatsModel from "../../../components/api/modelChats.js";
-import UserModel from "../../../components/api/modelUser.js";
-import MessagesModel from "../../../components/api/modelMessages.js";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useState } from "react";
 import { useEffect } from "react";
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 const ChatList = () => {
-  const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
   const [chats, setChats] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleDeleteChatId, setVisibleDeleteChatId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAlphabeticalSort, setIsAlphabeticalSort] = useState(false);
-  const [isChatNew, setIsChatNew] = useState(false);
   
   const chatsModel = new ChatsModel();
-  let userModel = null;
-  let messageModel = null;
   const userId = localStorage.getItem('userId');
 
 
@@ -32,22 +26,19 @@ const ChatList = () => {
     })
 
   useEffect(() => {
-    userModel = new UserModel();
-    messageModel = new MessagesModel();
- 
-    const fetchUser = async () => {
-      try {
-          const userData = await userModel.getUser(userId);
-          setUser(userData);
-      } catch (error) {
-          console.error("Failed to fetch user:", error);
-      }
-    };
-
-    fetchUser();
     fetchChats();
-
   }, []);
+
+  const formatDate = (date) => { 
+    if (isNaN(date.getTime())) {
+        return "";
+      }
+    return new Intl.DateTimeFormat("en-GB", 
+      { 
+        day: "2-digit", 
+        month: "short" 
+      }).format(date); 
+    };
 
 
   const fetchChats = async () => {
@@ -68,12 +59,10 @@ const ChatList = () => {
               ...element,
               isChatNew: false,
               createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
+              date: formatDate(createdAt),
               time: createdAt.toTimeString().slice(0, 5),
               lastMessage: lastMessage.messageText,
-              dayLastMessage: lastMessageDate.getDate(),
-              monthLastMessage: monthsShort[lastMessageDate.getMonth()],
+              dateLastMessage: formatDate(lastMessageDate),
               timeLastMessage: lastMessageDate.toTimeString().slice(0, 5),
             };
           } else {
@@ -93,6 +82,8 @@ const ChatList = () => {
     }
   };
 
+  
+
   const filteredChats = chats.filter(chat =>
     chat.correspondenceUser.userName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -106,7 +97,7 @@ const ChatList = () => {
   }
 
   const handleUsersClick = () => {
-    navigate(`/users/users/${user.id}`);
+    navigate(`/users/users/${userId}`);
   };
 
 
@@ -114,7 +105,6 @@ const ChatList = () => {
     setVisible(!visible);
     setVisibleDeleteChatId(chatId);
   }
-
 
   const deleteChat = async (chatId) => {
     await chatsModel.delete(chatId, userId);
@@ -147,7 +137,7 @@ const ChatList = () => {
             <NavLink
               key={chat.id}
               to={`/somechat/${chat.id}`}
-              state={{ chat, user }}
+              state={{ chat }}
               onContextMenu={() => setDeleteButton(chat.id)}
               className="chat-href container container-background d-flex flex-row align-items-center justify-content-between text-decoration-none"
               style={{ maxWidth: 1000, padding: "10px 5px" }}
@@ -157,7 +147,7 @@ const ChatList = () => {
               {(!chat.isChatNew) && (
                 <>
                   <div className="d-flex align-items-center profile-message">
-                    <img className="profile" src={chat.correspondenceUser.userAvatarURL} alt="ava" />
+                    <img className="profile" src={(chat.correspondenceUser.userAvatarURL.length > 0) ? chat.correspondenceUser.userAvatarURL : defaultAvatar} alt="ava" />
                     <div className="main-text d-flex flex-column justify-content-center">
                       <p className="mb-1">{chat.correspondenceUser.userName}</p>
                       <p className="mb-1">{chat.lastMessage}</p>
@@ -165,7 +155,7 @@ const ChatList = () => {
                   </div>
                   <div className="d-flex flex-row align-items-center gap-3 text-end pe-4 disc-time-text">
                     <div className="flex-column">
-                      <p className="mb-1">{chat.dayLastMessage + " " + chat.monthLastMessage}</p>
+                      <p className="mb-1">{chat.dateLastMessage}</p>
                       <p className="mb-1">{chat.timeLastMessage}</p>
                     </div>
                   </div>
@@ -175,7 +165,7 @@ const ChatList = () => {
               {(chat.isChatNew) && (
                 <>
                   <div className="d-flex align-items-center profile-message">
-                    <img className="profile" src={chat.correspondenceUser.userAvatarURL} alt="ava" />
+                    <img className="profile" src={(chat.correspondenceUser.userAvatarURL.length > 0) ? chat.correspondenceUser.userAvatarURL : defaultAvatar} alt="ava" />
                     <div className="main-text d-flex flex-column justify-content-center">
                       <p className="mb-1">{chat.correspondenceUser.userName}</p>
                       <p className="disc-time-text mb-1">{chat.lastMessage}</p>

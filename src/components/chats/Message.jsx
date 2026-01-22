@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../../../styles.css"
 
 const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
@@ -24,6 +24,8 @@ const Message = ({ message, handleDelete, handleUpdate, setUpdateMsg }) => {
   if (setUpdateMsg) {
     text = setUpdateMsg;
   }
+
+  
 
   return (
     <div key={message.id}>

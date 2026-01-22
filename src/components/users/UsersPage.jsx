@@ -7,9 +7,6 @@ const UsersPage = () => {
     const userModel = new UserModel();
     const [users, setUsers] = useState([]);
     const [userForList, setUserForList] = useState(null);
-    const currentPageRef = useRef(1);
-    const [fetching, setFetching] = useState(true);
-    const totalPagesRef = useRef(0);
     const [searchTerm, setSearchTerm] = useState("");
     const [isAlphabeticalSort, setIsAlphabeticalSort] = useState(false);
 
@@ -21,81 +18,50 @@ const UsersPage = () => {
                 setUserForList(await userModel.getUser(userIdForList));
             }
             fetchUserForList();
-        }   
-        setUsers([]);
-        currentPageRef.current = 1;
-        setFetching(true);
+        }
+        fetchUsers()
     }, [searchTerm, usersListType, userIdForList, isAlphabeticalSort]);
 
-    useEffect(() => {
-        if (fetching) {
-            fetchUsers();
-        }
-    }, [fetching, searchTerm, usersListType, userIdForList, isAlphabeticalSort]);
-
-    useEffect(() => {
-        document.addEventListener('scroll', scrollHandler);
-        return () => {
-            document.removeEventListener('scroll', scrollHandler);
-        };
-    }, []);
 
     const fetchUsers = async () => {
         try {
             let data;
-            const page = currentPageRef.current;
-            const size = 5;
             const userId = userIdForList;
-            const search = encodeURIComponent(searchTerm.trim());
 
             if (localStorage.getItem('role') === "USER") {
                 if (usersListType === "followers") {
-                   data = await userModel.getUsers(`users/followers?page=${page}&size=${size}&userId=${userId}`);
+                   data = await userModel.getUsers(`users/followers?userId=${userId}`);
                     
                 }
                 else if (usersListType === "subscriptions") {
-                    data = await userModel.getUsers(`users/subscriptions?page=${page}&size=${size}&userId=${userId}`);
+                    data = await userModel.getUsers(`users/subscriptions?userId=${userId}`);
                     
                 }
                 else if (usersListType === "users") {
-                
-                        if (searchTerm.trim().length === 0) {
-                            if (isAlphabeticalSort) {
-                                data = await userModel.getUsers(`users/users/sort?page=${page}&size=${size}&userId=${userId}`);
-                            } else {
-                                data = await userModel.getUsers(`users/users?page=${page}&size=${size}&userId=${userId}`);
-                            }
-                        } else {
-                            if (isAlphabeticalSort) {
-                                data = await userModel.getUsers(`users/users/sort/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
-                            } else {
-                                data = await userModel.getUsers(`users/users/filter?page=${page}&size=${size}&userNamePart=${search}&userId=${userId}`);
-                            }
-                        }
-                    
+                    data = await userModel.getUsers(`users/users?userId=${userId}`);
                 }
+
+                
             }
             else if (localStorage.getItem('role') === "ADMIN") {
 
-                data = await userModel.getUsers(`users?page=${page}&size=${size}&userId=${localStorage.getItem("userId")}`);
+                data = await userModel.getUsers(`users?userId=${localStorage.getItem("userId")}`);
                 console.log(data)
             }
 
-            totalPagesRef.current = data?.totalPages || 0;
-            setUsers(prev => [...prev, ...(data?.items || [])]);
-            currentPageRef.current += 1;
+            if (searchTerm.trim().length != 0) {
+                const searchLower = searchTerm.trim().toLowerCase(); 
+                data = data.filter(u => u.userName.toLowerCase().includes(searchLower));
+            }
+
+            if (isAlphabeticalSort) { 
+                data = data.sort((a, b) => a.userName.localeCompare(b.userName)); 
+            }
+
+            setUsers(data);
         } catch (error) {
             console.error("Ошибка загрузки пользователей:", error);
-        } finally {
-            setFetching(false);
-        }
-    };
-
-    const scrollHandler = (e) => {
-        if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100)
-            && currentPageRef.current <= totalPagesRef.current) {
-            setFetching(true);
-        }
+        }   
     };
 
     //для админа
@@ -105,7 +71,6 @@ const UsersPage = () => {
         if (user.id != localStorage.getItem("userId")) {
             await userModel.delete(user.id);
             setUsers([])
-            currentPageRef.current = 1;
             await fetchUsers();
         }
     };
@@ -113,7 +78,7 @@ const UsersPage = () => {
     return (
         <>
         
-        {(localStorage.getItem("role") === 'USER' && usersListType === "users") && (
+        {(localStorage.getItem("role") === 'USER') && (
             <div className="d-flex flex-row container-background mb-3" style={{ maxWidth: 1000, padding: "10px 10px", margin: "auto", marginTop: '10px', }}>
                 <input
                     type="text"
@@ -122,15 +87,15 @@ const UsersPage = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                {usersListType === "users" && (
-                    <button
-                        type="button"
-                        className="btn d-flex align-items-center"
-                        onClick={() => setIsAlphabeticalSort(prev => !prev)}
-                    >
-                        <i className="bi bi-sort-alpha-down h2" style={{ color: '#fffacd' }}></i>
-                    </button>
-                )}
+                
+                <button
+                    type="button"
+                    className="btn d-flex align-items-center"
+                    onClick={() => setIsAlphabeticalSort(prev => !prev)}
+                >
+                    <i className="bi bi-sort-alpha-down h2" style={{ color: '#fffacd' }}></i>
+                </button>
+                
             </div>)}
 
 

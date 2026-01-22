@@ -18,7 +18,6 @@ export const App = () => {
                     <Route path="/profile/:userId" element={<ProfilePage />} />
                     <Route path="/chats" element={<ChatList />} />
                     <Route path="/settings" element={<Settings />} />
-                    
                     <Route path="/users/:usersListType/:userIdForList" element={<UsersPage />} />
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/somechat/:chatId" element={<ChatWindow />} />

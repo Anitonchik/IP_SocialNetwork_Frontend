@@ -11,29 +11,14 @@ const Settings = () => {
     const [usersProfilePosts, setUsersProfilePosts] = useState(null);
     const [userFollowers, setUserFollowers] = useState([]);
     const [userSubscriptions, setUserSubscriptions] = useState([]);
-    const [isEditing, setIsEditing] = useState(false);
 
     const navigate = useNavigate();
-
-
-    const [editedUser, setEditedUser] = useState({
-        description: "",
-        name: "",
-        surname: "",
-        username: ""
-      });
-
     
     useEffect(() => {
       if (localStorage.getItem("token") == null) {
         navigate("/");
       }
     })
-
-
-    useEffect(() => {
-        setEditedUser({ ...user });
-    }, [user]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -43,16 +28,14 @@ const Settings = () => {
 
             const userId = localStorage.getItem('userId');
             
-            const followers = await model.getUsers(`users/followers?page=${1}&size=${5}&userId=${userId}`)
-            setUserFollowers(followers.totalItems);
-
-            const subscriptions = await model.getUsers(`users/subscriptions?page=${1}&size=${5}&userId=${userId}`)
-            setUserSubscriptions(subscriptions.totalItems);
+            const subscriptionsAndfollowers = await model.getUsers(`users/subscriptionsAndFollowers/count?userId=${userId}`)
+            setUserSubscriptions(subscriptionsAndfollowers.subscriptionsCount);
+            setUserFollowers(subscriptionsAndfollowers.followersCount);
 
             const userData = await model.getUser(userId);
-            const posts = await postModel.getAll(`posts/usersPosts/${userId}?page=${1}&size=5`);
+            const posts = await postModel.getAll(`posts/countUsersPosts/${userId}`);
             setUser(userData);
-            setUsersProfilePosts(posts.totalItems)
+            setUsersProfilePosts(posts)
           } catch (error) {
             console.error("Ошибка загрузки пользователя:", error);
           }
@@ -72,6 +55,7 @@ const Settings = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("role");
+        window.location.reload();
         navigate("/");
     }
 

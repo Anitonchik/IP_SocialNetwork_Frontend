@@ -371,6 +371,7 @@
     text-align: left;
     margin-left: 20px;
     margin-bottom: 10px;
+    overflow-wrap: break-word;
 }
 
 .base-icon {

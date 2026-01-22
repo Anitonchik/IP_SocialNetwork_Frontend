@@ -1,4 +1,3 @@
-import React from "react";
 import PostList from "../../components/profile/PostList";
 import "../../../styles.css";
 

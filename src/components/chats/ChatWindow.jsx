@@ -1,17 +1,16 @@
 import MessageInput from "./MessageInput";
 import Message from "./Message";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo,  ef } from "react";
 import { useLocation } from 'react-router-dom';
 import MessagesModel from "../../../components/api/modelMessages";
 import "../../../styles.css";
 import { useOutletContext } from "react-router-dom";
 
 const ChatWindow = () => {
-  const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const path = "fromChat"
 
   const location = useLocation();
-  const { chat, user } = location.state || {};
+  const { chat } = location.state || {};
 
   const { setHeaderData } = useOutletContext();
 
@@ -19,7 +18,6 @@ const ChatWindow = () => {
   const [messages, setMessages] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(null);
-  const messageRefs = useRef({});
 
   let date = null;
   let showDate = true;
@@ -33,21 +31,19 @@ const ChatWindow = () => {
   useEffect(() => {
     setHeaderData(chat);
     if (!chat) return;
-    if (!user) return;
     fetchMessages()
     const timer = setInterval(fetchMessages, 5000)
     return () => {clearInterval(timer)}
-  }, [user, chat]);
+  }, [chat]);
 
-  /*useEffect(() => {
-    const lastMessageId = messages[messages.length - 1]?.id;
-    if (lastMessageId && messageRefs.current[lastMessageId]) {
-      messageRefs.current[lastMessageId].scrollIntoView({
-        behavior: 'smooth',
-        block: 'end'
-      });
-    }
-  }, [messages]);*/
+
+   const formatDate = (date) => { 
+    return new Intl.DateTimeFormat("en-GB", 
+      { 
+        day: "2-digit", 
+        month: "short" 
+      }).format(date); 
+    };
 
 
   const fetchMessages = async () => {
@@ -57,28 +53,25 @@ const ChatWindow = () => {
       setMessages(chatMessages.map(element => {
         const createdAt = new Date(element.createdAt);
 
-        if (user) {
-          if (element.user.id == user.id) {
-            return {
-              ...element,
-              createdAt: createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              sender: "your"
-            }
-          }
-          else {
-            return {
-              ...element,
-              createdAt: createdAt,
-              day: createdAt.getDate(),
-              month: monthsShort[createdAt.getMonth()],
-              time: createdAt.toTimeString().slice(0, 5),
-              sender: "stranger"
-            }
+        if (element.user.id == chat.authUser.id) {
+          return {
+            ...element,
+            createdAt: createdAt,
+            date: formatDate(createdAt),
+            time: createdAt.toTimeString().slice(0, 5),
+            sender: "your"
           }
         }
+        else {
+          return {
+            ...element,
+            createdAt: createdAt,
+            date: formatDate(createdAt),
+            time: createdAt.toTimeString().slice(0, 5),
+            sender: "stranger"
+          }
+        }
+        
 
       }))
     } catch (error) {
@@ -90,7 +83,7 @@ const ChatWindow = () => {
     const createdAt = new Date();
     const newMessage = {
       chatId: chat.id,
-      userId: user.id,
+      userId: chat.authUser.id,
       messageText: text,
       createdAt: createdAt
     };
@@ -132,10 +125,10 @@ const ChatWindow = () => {
   }
 
   const messageList = useMemo(() => messages.map(msg => {
-    if (date === null || msg.day != date.getDate() || msg.month != monthsShort[date.getMonth()]) {
+    if (date === null || formatDate(date) != formatDate(msg.createdAt)) {
       showDate = true;
       date = new Date(msg.createdAt);
-    }
+    } 
     else {
       showDate = false;
     }
@@ -144,7 +137,7 @@ const ChatWindow = () => {
       <div key={msg.id}>
         {(showDate) && (
           <div className="d-block text-center">
-            <div className="date-message-text">{msg.day + " " + msg.month}</div>
+            <div className="date-message-text">{msg.date}</div>
           </div>)}
         
           <Message
@@ -155,7 +148,6 @@ const ChatWindow = () => {
           />
       </div>)
   }), [messages]);
-  //<div ref={(el) => { messageRefs.current[msg.id] = el; }}></div>
 
 
   return (

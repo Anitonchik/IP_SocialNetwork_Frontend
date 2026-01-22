@@ -2,42 +2,43 @@ import React, { useEffect, useState, useRef } from "react";
 import Post from "./Post.jsx";
 import PostModel from "../../../components/api/modelPost.js";
 import "../../../styles.css";
-import { data } from "react-router-dom";
 
 const PostList = () => {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
-  const userId = localStorage.getItem('userId');
+  let userId = localStorage.getItem('userId');
   const [posts, setPosts] = useState([]);
   const currentPageRef = useRef(1);
-  const [fetching, setFetching] = useState(true); // true - подгружаем данные
+  const [fetching, setFetching] = useState(true);
   const totalPagesRef = useRef(0);
 
   const model = new PostModel();
 
   useEffect(() => {
-      setIsAuth(!!localStorage.getItem("token"));
-  });
+    setIsAuth(!!localStorage.getItem("token"));
+  }, [userId]);
 
   useEffect(() => {
+       
+    currentPageRef.current = 1;
+    setPosts([]);
+    setFetching(true);
+  
+  }, [isAuth]);
+
+  useEffect(() => {
+    if (!fetching) return;
+
     if (fetching) {
-      if (isAuth) {
-        model.getAll(`posts/notUsersPosts/${userId}?page=${currentPageRef.current}&size=5`)
+      userId = localStorage.getItem('userId');
+      model.getAll(`posts/postsFromMainPage?page=${currentPageRef.current}&size=5&userId=${userId ? userId : 0}`)
         .then(data => {
           totalPagesRef.current = data.totalPages;
           setPosts(prev => [...prev, ...data.items]),
           currentPageRef.current += 1})
           .finally(() => setFetching(false));
-      }
-      else {
-        model.getAll(`posts/allPosts?page=${currentPageRef.current}&size=5` )
-        .then(data => {
-          totalPagesRef.current = data.totalPages;
-          setPosts(prev => [...prev, ...data.items]),
-          currentPageRef.current += 1})
-          .finally(() => setFetching(false));
-      }
+      
     }
-  }, [fetching]);
+  }, [fetching, isAuth, userId]);
 
   useEffect(() => {
     document.addEventListener('scroll', scrollHandler)

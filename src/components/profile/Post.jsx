@@ -5,7 +5,6 @@ import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 
 const Post = ({ post, onDelete, onEdit, showButtons }) => {
-  const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const [postsDesc, setPostsDesc] = useState("");
   const navigate = useNavigate()
 
@@ -13,12 +12,19 @@ const Post = ({ post, onDelete, onEdit, showButtons }) => {
     updPostAddDate();
   }, [])
 
+  const formatDate = (date) => { 
+    return new Intl.DateTimeFormat("en-GB", 
+      { 
+        day: "2-digit", 
+        month: "short" 
+      }).format(date); 
+    };
+
   const updPostAddDate = () => {
     const postDate = new Date(post.createdAt);
-    const day = postDate.getDate();
-    const month = monthsShort[postDate.getMonth()];
+    const date = formatDate(postDate);
     const time = postDate.toTimeString().slice(0, 5);
-    setPostsDesc(`${day} ${month}  ${time}`)
+    setPostsDesc(`${date}  ${time}`)
   }
 
   return (

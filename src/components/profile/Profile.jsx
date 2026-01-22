@@ -13,11 +13,9 @@ const Profile = ({user, postsTotalItems}) => {
     const fetchUser = async () => {
       try {
         userModel = new UserModel();
-        const followers = await userModel.getUsers(`users/followers?page=${1}&size=${5}&userId=${user.id}`)
-        setUserFollowers(followers.totalItems);
-
-        const subscriptions = await userModel.getUsers(`users/subscriptions?page=${1}&size=${5}&userId=${user.id}`)
-        setUserSubscriptions(subscriptions.totalItems);
+        const subscriptionsAndfollowers = await userModel.getUsers(`users/subscriptionsAndFollowers/count?userId=${user.id}`)
+        setUserSubscriptions(subscriptionsAndfollowers.subscriptionsCount);
+        setUserFollowers(subscriptionsAndfollowers.followersCount);
       } catch (error) {
         console.error("Ошибка загрузки пользователя:", error);
       } 

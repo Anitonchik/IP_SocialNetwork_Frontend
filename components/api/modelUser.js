@@ -23,8 +23,8 @@ export default class UserModel {
         return user;
     }
 
-    async createSubscription(id, userFollowingId) {
-        const subscribe = await updateItem(PATH + id + "/" + userFollowingId);
+    async createSubscription(id, subscribedUserId) {
+        const subscribe = await updateItem(PATH + id + "/" + subscribedUserId);
         return subscribe;
     }
 

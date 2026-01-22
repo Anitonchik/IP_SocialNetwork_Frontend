@@ -5,6 +5,7 @@ import "./Header.css"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { List } from 'react-bootstrap-icons';
 import { useMediaQuery } from 'react-responsive';
+import defaultAvatar from '../../../resources/defaultAvatar.jpg';
 
 export const Header = ({ headerData }) => {
     const navigate = useNavigate();
@@ -71,7 +72,7 @@ export const Header = ({ headerData }) => {
                         {(isChatPage && headerData) && (
                                 <div className="d-flex align-items-center gap-3" onClick={() => navigate(`/profile/${headerData.user.id}`)}> 
                                     <img 
-                                        src={headerData.correspondenceUser.userAvatarURL} 
+                                        src={(headerData.correspondenceUser.userAvatarURL.length > 0) ? headerData.correspondenceUser.userAvatarURL : defaultAvatar} 
                                         alt={"avatar"}
                                         className="profile d-flex align-items-center"
                                     />
